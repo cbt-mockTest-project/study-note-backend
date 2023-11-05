@@ -8,7 +8,7 @@ import { LoginType, User } from './entities/user.entity';
 import { CreateUserInput, CreateUserOutput } from './dto/create-user.dto';
 import shortid from 'shortid';
 import { TokenService } from './token.service';
-import { setLoginCookie } from 'src/lib/util';
+import { parseCookies, setLoginCookie } from 'src/lib/util';
 import { AuthRequest } from './interface/auth.interface';
 import { MeOutput } from './dto/me.dto';
 import { ConfigService } from '@nestjs/config';
@@ -177,6 +177,7 @@ export class UserService {
 
   async googleLogin(req: Request, res: Response) {
     try {
+      const cookies = parseCookies(req.headers.cookie);
       const code = req.url.split('code=').at(-1).split('&').at(0);
       const {
         data: { access_token },
@@ -233,12 +234,31 @@ export class UserService {
       const refreshToken = await this.tokenService.getRefreshToken(userId);
       await this.updateUser(userId, { refreshToken });
       setLoginCookie(res, accessToken, refreshToken);
-      res.redirect(this.configService.get('FRONTEND_URL'));
+      res.redirect(
+        `${this.configService.get('FRONTEND_URL')}${cookies.redirect || '/'}`,
+      );
     } catch (e) {
       return {
         ok: false,
         error: '로그인에 실패했습니다.',
       };
     }
+  }
+  async logout(res: Response) {
+    res.clearCookie('refreshToken', {
+      domain: this.configService.get('FRONTEND_DOMAIN'),
+      path: '/',
+      sameSite: 'none',
+      secure: true,
+      httpOnly: true,
+    });
+    res.clearCookie('accessToken', {
+      domain: this.configService.get('FRONTEND_DOMAIN'),
+      path: '/',
+      sameSite: 'none',
+      secure: true,
+      httpOnly: false,
+    });
+    res.sendStatus(200);
   }
 }

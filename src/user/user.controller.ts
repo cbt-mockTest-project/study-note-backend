@@ -54,6 +54,11 @@ export class UserController {
     return this.userService.remove(+id);
   }
 
+  @Post('logout')
+  async logout(@Res() res: Response) {
+    return this.userService.logout(res);
+  }
+
   @Post('refresh')
   refresh(
     @Res() res: Response,
