@@ -1,6 +1,9 @@
 import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { Column, Entity } from 'typeorm';
+import { Folder } from 'src/folder/entities/folder.entity';
+import { Question } from 'src/question/entities/question.entity';
+import { StudyNote } from 'src/study-note/entities/study-note.entity';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 export enum LoginType {
   GOOGLE = 'google',
@@ -35,4 +38,13 @@ export class User extends CoreEntity {
   @IsString()
   @Column({ default: '' })
   lastLogInIp?: string;
+
+  @OneToMany(() => Folder, (folder) => folder.user)
+  folders: Folder[];
+
+  @OneToMany(() => StudyNote, (studyNote) => studyNote.user)
+  studyNotes: StudyNote[];
+
+  @OneToMany(() => Question, (question) => question.user)
+  questions: Question[];
 }

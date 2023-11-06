@@ -3,6 +3,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
+import { FolderModule } from './folder/folder.module';
+import { StudyNoteModule } from './study-note/study-note.module';
+import { QuestionModule } from './question/question.module';
 
 @Module({
   imports: [
@@ -35,6 +38,9 @@ import { UserModule } from './user/user.module';
       }),
     }),
     UserModule,
+    FolderModule,
+    StudyNoteModule,
+    QuestionModule,
   ],
   controllers: [],
   providers: [],

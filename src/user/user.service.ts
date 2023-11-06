@@ -109,10 +109,6 @@ export class UserService {
     }
   }
 
-  findAll() {
-    return `This action returns all user`;
-  }
-
   async findUser(id: number): Promise<FindUserOutput> {
     try {
       console.log(id);
@@ -135,10 +131,6 @@ export class UserService {
         error: '유저를 찾을 수 없습니다.',
       };
     }
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
   }
 
   async refreshAuthToken(
