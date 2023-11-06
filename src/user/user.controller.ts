@@ -17,6 +17,8 @@ import { ProxyIp } from 'src/common/decorators/ip.decorator';
 import { AuthRequest } from './interface/auth.interface';
 import { Request, Response } from 'express';
 import { RefreshAuthTokenInput } from './dto/refresh-auth-token.dto';
+import { AuthUser } from 'src/common/decorators/auth-user.decorator';
+import { User } from './entities/user.entity';
 
 @Controller('user')
 export class UserController {
@@ -34,8 +36,8 @@ export class UserController {
 
   @UseGuards(JwtGuard)
   @Get('me')
-  async me(@Req() req: AuthRequest, @ProxyIp() ip?: string) {
-    return this.userService.me(req, ip);
+  async me(@AuthUser() user: User, @ProxyIp() ip?: string) {
+    return this.userService.me(user, ip);
   }
 
   @Get('login/google')

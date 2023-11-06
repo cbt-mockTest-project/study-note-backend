@@ -9,7 +9,6 @@ import { CreateUserInput, CreateUserOutput } from './dto/create-user.dto';
 import shortid from 'shortid';
 import { TokenService } from './token.service';
 import { parseCookies, setLoginCookie } from 'src/lib/util';
-import { AuthRequest } from './interface/auth.interface';
 import { MeOutput } from './dto/me.dto';
 import { ConfigService } from '@nestjs/config';
 import { FindUserOutput } from './dto/find-user.dto';
@@ -27,9 +26,8 @@ export class UserService {
     private configService: ConfigService,
   ) {}
 
-  async me(req: AuthRequest, ip?: string): Promise<MeOutput> {
+  async me(user: User, ip?: string): Promise<MeOutput> {
     try {
-      const user = req.user;
       await this.updateUser(user.id, { lastLogInIp: ip });
       return {
         ok: true,
@@ -111,7 +109,6 @@ export class UserService {
 
   async findUser(id: number): Promise<FindUserOutput> {
     try {
-      console.log(id);
       const user = await this.users.findOne({
         where: { id },
       });

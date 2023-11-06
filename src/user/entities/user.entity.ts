@@ -36,7 +36,7 @@ export class User extends CoreEntity {
 
   @IsOptional()
   @IsString()
-  @Column({ default: '' })
+  @Column({ default: '', select: false })
   lastLogInIp?: string;
 
   @OneToMany(() => Folder, (folder) => folder.user)
