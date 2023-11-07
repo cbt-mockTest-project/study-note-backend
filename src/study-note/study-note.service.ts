@@ -139,7 +139,7 @@ export class StudyNoteService {
     studyNoteId: number,
     updateStudyNoteInput: UpdateStudyNoteInput,
   ): Promise<UpdateStudyNoteOutput> {
-    const { name, folderId } = updateStudyNoteInput;
+    const { name, folderId, studyCardOrder } = updateStudyNoteInput;
     try {
       const studyNote = await this.studyNotes.findOne({
         where: {
@@ -177,6 +177,9 @@ export class StudyNoteService {
       }
       if (name) {
         studyNote.name = name;
+      }
+      if (studyCardOrder) {
+        studyNote.studyCardOrder = studyCardOrder;
       }
       await this.studyNotes.save(studyNote);
       return {
