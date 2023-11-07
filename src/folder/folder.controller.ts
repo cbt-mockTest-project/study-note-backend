@@ -7,7 +7,6 @@ import {
   Patch,
   Post,
   Query,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import { FolderService } from './folder.service';
@@ -23,7 +22,10 @@ export class FolderController {
   constructor(private readonly folderService: FolderService) {}
   @UseGuards(JwtGuard)
   @Post()
-  create(@AuthUser() user: User, @Body() createFolderInput: CreateFolderInput) {
+  createFolder(
+    @AuthUser() user: User,
+    @Body() createFolderInput: CreateFolderInput,
+  ) {
     return this.folderService.createFolder(user, createFolderInput);
   }
 
