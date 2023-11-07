@@ -9,12 +9,15 @@ import { GetFoldersInput, GetFoldersOutput } from './dto/get-folders.dto';
 import { CoreOutput } from 'src/common/dtos/output.dto';
 import { UpdateFolderInput, UpdateFolderOutput } from './dto/update-folder.dto';
 import { StudyCard } from 'src/study-card/entities/study-card.entity';
+import { FolderBookmark } from 'src/folder-bookmark/entities/folder-bookmark.entity';
 
 @Injectable()
 export class FolderService {
   constructor(
     @InjectRepository(Folder)
     private readonly folders: Repository<Folder>,
+    @InjectRepository(FolderBookmark)
+    private readonly folderBookmarks: Repository<FolderBookmark>,
     @InjectRepository(StudyNote)
     private readonly studyNotes: Repository<StudyNote>,
     @InjectRepository(StudyCard)
@@ -48,18 +51,40 @@ export class FolderService {
     getFoldersInput: GetFoldersInput,
   ): Promise<GetFoldersOutput> {
     try {
-      const { access } = getFoldersInput;
-      const folders = await this.folders.find({
-        where: {
-          access,
-          user: {
-            id: user.id,
+      const { access, filter } = getFoldersInput;
+      let folders: Folder[] = [];
+      if (filter === 'bookmark') {
+        const folderBookmarks = await this.folderBookmarks.find({
+          where: {
+            user: {
+              id: user.id,
+            },
           },
-        },
-        order: {
-          created_at: 'DESC',
-        },
-      });
+          relations: {
+            folder: true,
+          },
+          order: {
+            created_at: 'DESC',
+          },
+        });
+        folders = folderBookmarks.map((folderBookmark) => {
+          return folderBookmark.folder;
+        });
+      }
+      if (filter === 'me') {
+        folders = await this.folders.find({
+          where: {
+            access,
+            user: {
+              id: user.id,
+            },
+          },
+          order: {
+            created_at: 'DESC',
+          },
+        });
+      }
+
       return {
         ok: true,
         folders,
