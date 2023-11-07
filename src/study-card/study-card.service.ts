@@ -69,23 +69,23 @@ export class StudyCardService {
     }
   }
 
-  async deleteStudyCard(user: User, studyNoteId: number): Promise<CoreOutput> {
+  async deleteStudyCard(user: User, studyCardId: number): Promise<CoreOutput> {
     try {
-      const studyNote = await this.studyNotes.findOne({
+      const studyCard = await this.studyCards.findOne({
         where: {
-          id: studyNoteId,
+          id: studyCardId,
           user: {
             id: user.id,
           },
         },
       });
-      if (!studyNote) {
+      if (!studyCard) {
         return {
           ok: false,
           error: '카드를 찾을 수 없습니다.',
         };
       }
-      await this.studyNotes.delete(studyNoteId);
+      await this.studyCards.delete(studyCardId);
       return {
         ok: true,
       };
