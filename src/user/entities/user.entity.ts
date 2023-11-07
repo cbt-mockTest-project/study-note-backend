@@ -1,7 +1,7 @@
 import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { Folder } from 'src/folder/entities/folder.entity';
-import { Question } from 'src/question/entities/question.entity';
+import { StudyCard } from 'src/study-card/entities/study-card.entity';
 import { StudyNote } from 'src/study-note/entities/study-note.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 
@@ -45,6 +45,6 @@ export class User extends CoreEntity {
   @OneToMany(() => StudyNote, (studyNote) => studyNote.user)
   studyNotes: StudyNote[];
 
-  @OneToMany(() => Question, (question) => question.user)
-  questions: Question[];
+  @OneToMany(() => StudyCard, (studyCard) => studyCard.user)
+  studyCards: StudyCard[];
 }

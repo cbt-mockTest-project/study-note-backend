@@ -1,7 +1,7 @@
 import { IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { Folder } from 'src/folder/entities/folder.entity';
-import { Question } from 'src/question/entities/question.entity';
+import { StudyCard } from 'src/study-card/entities/study-card.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
@@ -12,7 +12,7 @@ export class StudyNote extends CoreEntity {
   name: string;
 
   @Column({ type: 'json', default: [] })
-  questionOrder: number[];
+  studyCardOrder: number[];
 
   @ManyToOne(() => User, (user) => user.studyNotes, {
     onDelete: 'CASCADE',
@@ -22,6 +22,6 @@ export class StudyNote extends CoreEntity {
   @ManyToOne(() => Folder, (folder) => folder.studyNotes, { nullable: true })
   folder: Folder;
 
-  @OneToMany(() => Question, (question) => question.studyNote)
-  questions: Question[];
+  @OneToMany(() => StudyCard, (studyCard) => studyCard.studyNote)
+  studyCards: StudyCard[];
 }

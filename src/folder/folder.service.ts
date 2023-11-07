@@ -3,12 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Folder } from './entities/folder.entity';
 import { Repository } from 'typeorm';
 import { StudyNote } from 'src/study-note/entities/study-note.entity';
-import { Question } from 'src/question/entities/question.entity';
 import { User } from 'src/user/entities/user.entity';
 import { CreateFolderOutput, CreateFolderInput } from './dto/create-folder.dto';
 import { GetFoldersInput, GetFoldersOutput } from './dto/get-folders.dto';
 import { CoreOutput } from 'src/common/dtos/output.dto';
 import { UpdateFolderInput, UpdateFolderOutput } from './dto/update-folder.dto';
+import { StudyCard } from 'src/study-card/entities/study-card.entity';
 
 @Injectable()
 export class FolderService {
@@ -17,8 +17,8 @@ export class FolderService {
     private readonly folders: Repository<Folder>,
     @InjectRepository(StudyNote)
     private readonly studyNotes: Repository<StudyNote>,
-    @InjectRepository(Question)
-    private readonly questions: Repository<Question>,
+    @InjectRepository(StudyCard)
+    private readonly studyCards: Repository<StudyCard>,
     @InjectRepository(User)
     private readonly users: Repository<User>,
   ) {}

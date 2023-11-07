@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StudyNote } from './entities/study-note.entity';
 import { Repository } from 'typeorm';
-import { Question } from 'src/question/entities/question.entity';
+import { StudyCard } from 'src/study-card/entities/study-card.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
   CreateStudyNoteOutput,
@@ -26,8 +26,8 @@ export class StudyNoteService {
     private readonly folders: Repository<Folder>,
     @InjectRepository(StudyNote)
     private readonly studyNotes: Repository<StudyNote>,
-    @InjectRepository(Question)
-    private readonly questions: Repository<Question>,
+    @InjectRepository(StudyCard)
+    private readonly studyCards: Repository<StudyCard>,
     @InjectRepository(User)
     private readonly users: Repository<User>,
   ) {}

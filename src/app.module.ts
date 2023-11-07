@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { FolderModule } from './folder/folder.module';
 import { StudyNoteModule } from './study-note/study-note.module';
-import { QuestionModule } from './question/question.module';
+import { StudyCardModule } from './study-card/study-card.module';
 
 @Module({
   imports: [
@@ -40,7 +40,7 @@ import { QuestionModule } from './question/question.module';
     UserModule,
     FolderModule,
     StudyNoteModule,
-    QuestionModule,
+    StudyCardModule,
   ],
   controllers: [],
   providers: [],
