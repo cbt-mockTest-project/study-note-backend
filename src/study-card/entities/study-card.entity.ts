@@ -11,6 +11,7 @@ export class StudyCard extends CoreEntity {
   question: string;
 
   @IsString()
+  @IsOptional()
   @Column({ default: '' })
   question_img: string;
 
@@ -20,6 +21,7 @@ export class StudyCard extends CoreEntity {
   answer: string;
 
   @IsString()
+  @IsOptional()
   @Column({ default: '' })
   answer_img: string;
 
