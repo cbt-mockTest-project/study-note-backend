@@ -8,13 +8,13 @@ import {
   UseGuards,
   Req,
   Res,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserInput } from './dto/create-user.dto';
 import { UpdateUserInput } from './dto/update-user.dto';
 import { JwtGuard } from 'src/guards/jwt.guard';
 import { ProxyIp } from 'src/common/decorators/ip.decorator';
-import { AuthRequest } from './interface/auth.interface';
 import { Request, Response } from 'express';
 import { RefreshAuthTokenInput } from './dto/refresh-auth-token.dto';
 import { AuthUser } from 'src/common/decorators/auth-user.decorator';
@@ -30,7 +30,10 @@ export class UserController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserInput: UpdateUserInput) {
+  update(
+    @Param('id', ParseIntPipe) id: string,
+    @Body() updateUserInput: UpdateUserInput,
+  ) {
     return this.userService.updateUser(+id, updateUserInput);
   }
 
@@ -46,7 +49,7 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     return this.userService.findUser(+id);
   }
 

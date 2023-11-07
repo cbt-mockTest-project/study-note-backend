@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -40,7 +41,10 @@ export class FolderController {
 
   @UseGuards(JwtGuard)
   @Delete(':id')
-  deleteFolder(@AuthUser() user: User, @Param('id') folderId: string) {
+  deleteFolder(
+    @AuthUser() user: User,
+    @Param('id', ParseIntPipe) folderId: string,
+  ) {
     return this.folderService.deleteFolder(user, +folderId);
   }
 
@@ -48,7 +52,7 @@ export class FolderController {
   @Patch(':id')
   updateFolder(
     @AuthUser() user: User,
-    @Param('id') folderId: string,
+    @Param('id', ParseIntPipe) folderId: string,
     @Body() updateFolderInput: UpdateFolderInput,
   ) {
     return this.folderService.updateFolder(user, +folderId, updateFolderInput);

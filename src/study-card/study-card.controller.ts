@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   UseGuards,
@@ -28,7 +29,7 @@ export class StudyCardController {
   @Patch(':id')
   updateStudyNote(
     @AuthUser() user: User,
-    @Param('id') studyNoteId: string,
+    @Param('id', ParseIntPipe) studyNoteId: string,
     @Body() updateStudyCardInput: UpdateStudyCardInput,
   ) {
     return this.studyCardService.updateStudyCard(

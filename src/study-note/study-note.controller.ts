@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -48,7 +49,7 @@ export class StudyNoteController {
   @Patch(':id')
   updateStudyNote(
     @AuthUser() user: User,
-    @Param('id') studyNoteId: string,
+    @Param('id', ParseIntPipe) studyNoteId: string,
     @Body() updateStudyNoteInput: UpdateStudyNoteInput,
   ) {
     return this.studyNoteService.updateStudyNote(

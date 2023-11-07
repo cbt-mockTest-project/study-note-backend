@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { FolderModule } from './folder/folder.module';
 import { StudyNoteModule } from './study-note/study-note.module';
 import { StudyCardModule } from './study-card/study-card.module';
+import { FolderBookmarkModule } from './folder-bookmark/folder-bookmark.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { StudyCardModule } from './study-card/study-card.module';
     FolderModule,
     StudyNoteModule,
     StudyCardModule,
+    FolderBookmarkModule,
   ],
   controllers: [],
   providers: [],
