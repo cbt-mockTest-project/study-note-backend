@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   /** 비로그인 유저 - role이 지정되어 있지 않을 경우 통과
-   *  로그인 유저 - ANY일경우 ADMIN, CLIENT 모두 통과
+   *  로그인 유저 - any일경우 admin, client 모두 통과
    *  로그인 유저 - 데코레이터에 명시한 Role과 자신의 Role이 일치 할 경우 통과
    */
   async canActivate(context: ExecutionContext) {
@@ -47,7 +47,7 @@ export class AuthGuard implements CanActivate {
           }
           if (roles) {
             // 로그인 유저 통과
-            if (roles.includes('Any')) {
+            if (roles.includes('any')) {
               return true;
             }
             return roles.includes(user.role);

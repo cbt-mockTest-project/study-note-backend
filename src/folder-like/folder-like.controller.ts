@@ -9,7 +9,7 @@ import { Role } from 'src/common/decorators/role.decorators';
 export class FolderLikeController {
   constructor(private readonly folderBookmarkService: FolderLikeService) {}
 
-  @Role(['Any'])
+  @Role(['any'])
   @Post(':id')
   async createFolderLike(
     @AuthUser() user: User,
@@ -18,7 +18,7 @@ export class FolderLikeController {
     return this.folderBookmarkService.createFolderLike(user.id, +folderId);
   }
 
-  @Role(['Any'])
+  @Role(['any'])
   @Delete(':id')
   async deleteFolderLike(
     @AuthUser() user: User,

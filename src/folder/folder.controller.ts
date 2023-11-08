@@ -12,7 +12,7 @@ import {
 import { FolderService } from './folder.service';
 import { CreateFolderInput } from './dto/create-folder.dto';
 import { AuthUser } from 'src/common/decorators/auth-user.decorator';
-import { User, UserRole } from 'src/user/entities/user.entity';
+import { User } from 'src/user/entities/user.entity';
 import { GetMyFoldersInput } from './dto/get-my-folders.dto';
 import { UpdateFolderInput } from './dto/update-folder.dto';
 import { Role } from 'src/common/decorators/role.decorators';
@@ -20,7 +20,7 @@ import { Role } from 'src/common/decorators/role.decorators';
 @Controller('folder')
 export class FolderController {
   constructor(private readonly folderService: FolderService) {}
-  @Role(['Any'])
+  @Role(['any'])
   @Post()
   createFolder(
     @AuthUser() user: User,
@@ -29,7 +29,7 @@ export class FolderController {
     return this.folderService.createFolder(user, createFolderInput);
   }
 
-  @Role(['Any'])
+  @Role(['any'])
   @Get('')
   getMyFolders(
     @AuthUser() user: User,
@@ -46,7 +46,7 @@ export class FolderController {
     return this.folderService.getFolder(user, +folderId);
   }
 
-  @Role(['Any'])
+  @Role(['any'])
   @Delete(':id')
   deleteFolder(
     @AuthUser() user: User,
@@ -55,7 +55,7 @@ export class FolderController {
     return this.folderService.deleteFolder(user, +folderId);
   }
 
-  @Role(['Any'])
+  @Role(['any'])
   @Patch(':id')
   updateFolder(
     @AuthUser() user: User,

@@ -36,7 +36,7 @@ export class UserController {
     return this.userService.updateUser(+id, updateUserInput);
   }
 
-  @Role(['Any'])
+  @Role(['any'])
   @Get('me')
   async me(@AuthUser() user: User, @ProxyIp() ip?: string) {
     return this.userService.me(user, ip);

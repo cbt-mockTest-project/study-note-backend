@@ -18,13 +18,13 @@ import { Role } from 'src/common/decorators/role.decorators';
 export class StudyCardController {
   constructor(private readonly studyCardService: StudyCardService) {}
 
-  @Role(['Any'])
+  @Role(['any'])
   @Delete(':id')
   deleteStudyNote(@AuthUser() user: User, @Param('id') studyNoteId: string) {
     return this.studyCardService.deleteStudyCard(user, +studyNoteId);
   }
 
-  @Role(['Any'])
+  @Role(['any'])
   @Patch(':id')
   updateStudyNote(
     @AuthUser() user: User,
@@ -38,7 +38,7 @@ export class StudyCardController {
     );
   }
 
-  @Role(['Any'])
+  @Role(['any'])
   @Post('')
   createStudyNote(
     @AuthUser() user: User,

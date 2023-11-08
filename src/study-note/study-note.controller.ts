@@ -20,7 +20,7 @@ import { Role } from 'src/common/decorators/role.decorators';
 @Controller('study-note')
 export class StudyNoteController {
   constructor(private readonly studyNoteService: StudyNoteService) {}
-  @Role(['Any'])
+  @Role(['any'])
   @Post()
   createStudyNote(
     @AuthUser() user: User,
@@ -29,7 +29,7 @@ export class StudyNoteController {
     return this.studyNoteService.createStudyNote(user, createStudyNoteInput);
   }
 
-  @Role(['Any'])
+  @Role(['any'])
   @Get('')
   getMyStudyNotes(
     @AuthUser() user: User,
@@ -38,13 +38,13 @@ export class StudyNoteController {
     return this.studyNoteService.getStudyNotes(user, getStudyNotesInput);
   }
 
-  @Role(['Any'])
+  @Role(['any'])
   @Delete(':id')
   deleteStudyNote(@AuthUser() user: User, @Param('id') studyNoteId: string) {
     return this.studyNoteService.deleteStudyNote(user, +studyNoteId);
   }
 
-  @Role(['Any'])
+  @Role(['any'])
   @Patch(':id')
   updateStudyNote(
     @AuthUser() user: User,

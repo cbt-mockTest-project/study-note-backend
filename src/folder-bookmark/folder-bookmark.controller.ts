@@ -9,7 +9,7 @@ import { Role } from 'src/common/decorators/role.decorators';
 export class FolderBookmarkController {
   constructor(private readonly folderBookmarkService: FolderBookmarkService) {}
 
-  @Role(['Any'])
+  @Role(['any'])
   @Post(':id')
   async createFolderBookmark(
     @AuthUser() user: User,
@@ -18,7 +18,7 @@ export class FolderBookmarkController {
     return this.folderBookmarkService.createFolderBookmark(user.id, +folderId);
   }
 
-  @Role(['Any'])
+  @Role(['any'])
   @Delete(':id')
   async deleteFolderBookmark(
     @AuthUser() user: User,
