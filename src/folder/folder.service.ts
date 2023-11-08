@@ -1,15 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Folder } from './entities/folder.entity';
+import { Folder, FolderAccess } from './entities/folder.entity';
 import { Repository } from 'typeorm';
 import { StudyNote } from 'src/study-note/entities/study-note.entity';
 import { User } from 'src/user/entities/user.entity';
 import { CreateFolderOutput, CreateFolderInput } from './dto/create-folder.dto';
-import { GetFoldersInput, GetFoldersOutput } from './dto/get-folders.dto';
+import {
+  GetMyFoldersInput,
+  GetMyFoldersOutput,
+} from './dto/get-my-folders.dto';
 import { CoreOutput } from 'src/common/dtos/output.dto';
 import { UpdateFolderInput, UpdateFolderOutput } from './dto/update-folder.dto';
 import { StudyCard } from 'src/study-card/entities/study-card.entity';
 import { FolderBookmark } from 'src/folder-bookmark/entities/folder-bookmark.entity';
+import { GetFolderOutput } from './dto/get-folder.dto';
 
 @Injectable()
 export class FolderService {
@@ -46,12 +50,50 @@ export class FolderService {
     }
   }
 
-  async getFolders(
-    user: User,
-    getFoldersInput: GetFoldersInput,
-  ): Promise<GetFoldersOutput> {
+  async getFolder(user: User, folderId: number): Promise<GetFolderOutput> {
     try {
-      const { access, filter } = getFoldersInput;
+      const folder = await this.folders.findOne({
+        where: {
+          id: folderId,
+        },
+        relations: {
+          user: true,
+          studyNotes: true,
+          folderBookmarks: true,
+          folderLikes: true,
+        },
+      });
+      if (!folder) {
+        return {
+          ok: false,
+          error: '폴더를 찾을 수 없습니다.',
+        };
+      }
+      const isMyFolder = user && user.id === folder.user.id;
+      if (!isMyFolder && folder.access === FolderAccess.SECRET) {
+        return {
+          ok: false,
+          error: '접근 권한이 없습니다.',
+        };
+      }
+      return {
+        ok: true,
+        folder,
+      };
+    } catch (e) {
+      return {
+        ok: false,
+        error: '폴더를 불러오는데 실패했습니다.',
+      };
+    }
+  }
+
+  async getMyFolders(
+    user: User,
+    getMyFoldersInput: GetMyFoldersInput,
+  ): Promise<GetMyFoldersOutput> {
+    try {
+      const { access, filter } = getMyFoldersInput;
       let folders: Folder[] = [];
       if (filter === 'bookmark') {
         const folderBookmarks = await this.folderBookmarks.find({

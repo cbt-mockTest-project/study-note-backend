@@ -8,6 +8,7 @@ import { StudyNoteModule } from './study-note/study-note.module';
 import { StudyCardModule } from './study-card/study-card.module';
 import { FolderBookmarkModule } from './folder-bookmark/folder-bookmark.module';
 import { FolderLikeModule } from './folder-like/folder-like.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { FolderLikeModule } from './folder-like/folder-like.module';
     StudyCardModule,
     FolderBookmarkModule,
     FolderLikeModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

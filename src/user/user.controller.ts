@@ -5,7 +5,6 @@ import {
   Body,
   Patch,
   Param,
-  UseGuards,
   Req,
   Res,
   ParseIntPipe,
@@ -13,12 +12,12 @@ import {
 import { UserService } from './user.service';
 import { CreateUserInput } from './dto/create-user.dto';
 import { UpdateUserInput } from './dto/update-user.dto';
-import { JwtGuard } from 'src/guards/jwt.guard';
 import { ProxyIp } from 'src/common/decorators/ip.decorator';
 import { Request, Response } from 'express';
 import { RefreshAuthTokenInput } from './dto/refresh-auth-token.dto';
 import { AuthUser } from 'src/common/decorators/auth-user.decorator';
-import { User } from './entities/user.entity';
+import { User, UserRole } from './entities/user.entity';
+import { Role } from 'src/common/decorators/role.decorators';
 
 @Controller('user')
 export class UserController {
@@ -37,7 +36,7 @@ export class UserController {
     return this.userService.updateUser(+id, updateUserInput);
   }
 
-  @UseGuards(JwtGuard)
+  @Role(['Any'])
   @Get('me')
   async me(@AuthUser() user: User, @ProxyIp() ip?: string) {
     return this.userService.me(user, ip);

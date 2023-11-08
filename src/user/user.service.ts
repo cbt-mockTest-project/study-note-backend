@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 import { LoginType, User } from './entities/user.entity';
 import { CreateUserInput, CreateUserOutput } from './dto/create-user.dto';
 import shortid from 'shortid';
-import { TokenService } from './token.service';
+import { TokenService } from '../auth/token.service';
 import { parseCookies, setLoginCookie } from 'src/lib/util';
 import { MeOutput } from './dto/me.dto';
 import { ConfigService } from '@nestjs/config';

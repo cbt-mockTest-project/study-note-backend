@@ -12,6 +12,11 @@ export enum LoginType {
   KAKAO = 'kakao',
 }
 
+export enum UserRole {
+  ADMIN = 'admin',
+  CLIENT = 'client',
+}
+
 @Entity()
 export class User extends CoreEntity {
   @IsEmail()
@@ -25,6 +30,10 @@ export class User extends CoreEntity {
   @IsEnum(LoginType)
   @Column({ type: 'enum', enum: LoginType })
   loginType: LoginType;
+
+  @IsEnum(UserRole)
+  @Column({ type: 'enum', enum: UserRole, default: UserRole.CLIENT })
+  role: UserRole;
 
   @IsOptional()
   @IsString()

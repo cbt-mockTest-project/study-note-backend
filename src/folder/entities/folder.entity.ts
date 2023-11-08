@@ -18,9 +18,8 @@ export class Folder extends CoreEntity {
   name: string;
 
   @IsEnum(FolderAccess)
-  @IsOptional()
-  @Column({ type: 'enum', enum: FolderAccess, default: FolderAccess.SECRET })
-  access?: FolderAccess;
+  @Column({ type: 'enum', enum: FolderAccess })
+  access: FolderAccess;
 
   @ManyToOne(() => User, (user) => user.folders, { onDelete: 'CASCADE' })
   user: User;

@@ -3,13 +3,13 @@ import { Folder } from '../entities/folder.entity';
 import { IsEnum, IsOptional } from 'class-validator';
 import { PickType } from '@nestjs/mapped-types';
 
-export class GetFoldersInput extends PickType(Folder, ['access']) {
+export class GetMyFoldersInput extends PickType(Folder, ['access']) {
   @IsOptional()
   @IsEnum(['me', 'bookmark'])
   filter?: 'me' | 'bookmark' = 'me';
 }
 
-export class GetFoldersOutput extends CoreOutput {
+export class GetMyFoldersOutput extends CoreOutput {
   @IsOptional()
   folders?: Folder[] = [];
 }

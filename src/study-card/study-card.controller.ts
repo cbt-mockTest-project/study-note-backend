@@ -6,26 +6,25 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { StudyCardService } from './study-card.service';
-import { JwtGuard } from 'src/guards/jwt.guard';
 import { AuthUser } from 'src/common/decorators/auth-user.decorator';
-import { User } from 'src/user/entities/user.entity';
+import { User, UserRole } from 'src/user/entities/user.entity';
 import { UpdateStudyCardInput } from './dto/update-study-card.dto';
 import { CreateStudyCardInput } from './dto/create-study-card.dto';
+import { Role } from 'src/common/decorators/role.decorators';
 
 @Controller('study-card')
 export class StudyCardController {
   constructor(private readonly studyCardService: StudyCardService) {}
 
-  @UseGuards(JwtGuard)
+  @Role(['Any'])
   @Delete(':id')
   deleteStudyNote(@AuthUser() user: User, @Param('id') studyNoteId: string) {
     return this.studyCardService.deleteStudyCard(user, +studyNoteId);
   }
 
-  @UseGuards(JwtGuard)
+  @Role(['Any'])
   @Patch(':id')
   updateStudyNote(
     @AuthUser() user: User,
@@ -39,7 +38,7 @@ export class StudyCardController {
     );
   }
 
-  @UseGuards(JwtGuard)
+  @Role(['Any'])
   @Post('')
   createStudyNote(
     @AuthUser() user: User,

@@ -1,22 +1,15 @@
-import {
-  Controller,
-  Delete,
-  Param,
-  ParseIntPipe,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Delete, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { FolderBookmarkService } from './folder-bookmark.service';
 import { CoreOutput } from 'src/common/dtos/output.dto';
 import { AuthUser } from 'src/common/decorators/auth-user.decorator';
-import { JwtGuard } from 'src/guards/jwt.guard';
-import { User } from 'src/user/entities/user.entity';
+import { User, UserRole } from 'src/user/entities/user.entity';
+import { Role } from 'src/common/decorators/role.decorators';
 
 @Controller('folder-bookmark')
 export class FolderBookmarkController {
   constructor(private readonly folderBookmarkService: FolderBookmarkService) {}
 
-  @UseGuards(JwtGuard)
+  @Role(['Any'])
   @Post(':id')
   async createFolderBookmark(
     @AuthUser() user: User,
@@ -25,7 +18,7 @@ export class FolderBookmarkController {
     return this.folderBookmarkService.createFolderBookmark(user.id, +folderId);
   }
 
-  @UseGuards(JwtGuard)
+  @Role(['Any'])
   @Delete(':id')
   async deleteFolderBookmark(
     @AuthUser() user: User,

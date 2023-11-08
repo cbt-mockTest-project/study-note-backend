@@ -1,11 +1,8 @@
-import { PickType } from '@nestjs/mapped-types';
 import { CoreOutput } from 'src/common/dtos/output.dto';
 import { Folder } from '../entities/folder.entity';
 import { IsOptional } from 'class-validator';
 
-export class CreateFolderInput extends PickType(Folder, ['name', 'access']) {}
-
-export class CreateFolderOutput extends CoreOutput {
+export class GetFolderOutput extends CoreOutput {
   @IsOptional()
   folder?: Folder;
 }

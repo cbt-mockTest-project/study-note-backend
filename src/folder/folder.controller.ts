@@ -8,20 +8,19 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { FolderService } from './folder.service';
 import { CreateFolderInput } from './dto/create-folder.dto';
-import { JwtGuard } from 'src/guards/jwt.guard';
 import { AuthUser } from 'src/common/decorators/auth-user.decorator';
-import { User } from 'src/user/entities/user.entity';
-import { GetFoldersInput } from './dto/get-folders.dto';
+import { User, UserRole } from 'src/user/entities/user.entity';
+import { GetMyFoldersInput } from './dto/get-my-folders.dto';
 import { UpdateFolderInput } from './dto/update-folder.dto';
+import { Role } from 'src/common/decorators/role.decorators';
 
 @Controller('folder')
 export class FolderController {
   constructor(private readonly folderService: FolderService) {}
-  @UseGuards(JwtGuard)
+  @Role(['Any'])
   @Post()
   createFolder(
     @AuthUser() user: User,
@@ -30,16 +29,24 @@ export class FolderController {
     return this.folderService.createFolder(user, createFolderInput);
   }
 
-  @UseGuards(JwtGuard)
+  @Role(['Any'])
   @Get('')
   getMyFolders(
     @AuthUser() user: User,
-    @Query() getFoldersInput: GetFoldersInput,
+    @Query() getFoldersInput: GetMyFoldersInput,
   ) {
-    return this.folderService.getFolders(user, getFoldersInput);
+    return this.folderService.getMyFolders(user, getFoldersInput);
   }
 
-  @UseGuards(JwtGuard)
+  @Get(':id')
+  getFolder(
+    @AuthUser() user: User,
+    @Param('id', ParseIntPipe) folderId: string,
+  ) {
+    return this.folderService.getFolder(user, +folderId);
+  }
+
+  @Role(['Any'])
   @Delete(':id')
   deleteFolder(
     @AuthUser() user: User,
@@ -48,7 +55,7 @@ export class FolderController {
     return this.folderService.deleteFolder(user, +folderId);
   }
 
-  @UseGuards(JwtGuard)
+  @Role(['Any'])
   @Patch(':id')
   updateFolder(
     @AuthUser() user: User,
