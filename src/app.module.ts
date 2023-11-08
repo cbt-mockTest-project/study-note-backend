@@ -9,6 +9,7 @@ import { StudyCardModule } from './study-card/study-card.module';
 import { FolderBookmarkModule } from './folder-bookmark/folder-bookmark.module';
 import { FolderLikeModule } from './folder-like/folder-like.module';
 import { AuthModule } from './auth/auth.module';
+import { CardScoreModule } from './card-score/card-score.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { AuthModule } from './auth/auth.module';
     FolderBookmarkModule,
     FolderLikeModule,
     AuthModule,
+    CardScoreModule,
   ],
   controllers: [],
   providers: [],

@@ -1,8 +1,9 @@
 import { IsOptional, IsString } from 'class-validator';
+import { CardScore } from 'src/card-score/entities/card-score.entity';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { StudyNote } from 'src/study-note/entities/study-note.entity';
 import { User } from 'src/user/entities/user.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity()
 export class StudyCard extends CoreEntity {
@@ -34,4 +35,7 @@ export class StudyCard extends CoreEntity {
     onDelete: 'CASCADE',
   })
   studyNote: StudyNote;
+
+  @OneToMany(() => CardScore, (cardScores) => cardScores.studyCard)
+  cardScores: StudyNote[];
 }

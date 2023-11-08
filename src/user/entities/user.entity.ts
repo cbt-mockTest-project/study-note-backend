@@ -1,4 +1,5 @@
 import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
+import { CardScore } from 'src/card-score/entities/card-score.entity';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { FolderBookmark } from 'src/folder-bookmark/entities/folder-bookmark.entity';
 import { FolderLike } from 'src/folder-like/entities/folder-like.entity';
@@ -64,4 +65,7 @@ export class User extends CoreEntity {
 
   @OneToMany(() => FolderLike, (folderLikes) => folderLikes.user)
   folderLikes: FolderLike[];
+
+  @OneToMany(() => CardScore, (cardScores) => cardScores.user)
+  cardScores: CardScore[];
 }
