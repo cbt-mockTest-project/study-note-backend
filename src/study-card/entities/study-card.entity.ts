@@ -1,5 +1,8 @@
 import { IsOptional, IsString } from 'class-validator';
-import { CardScore } from 'src/card-score/entities/card-score.entity';
+import {
+  CardScore,
+  CardScoreLevel,
+} from 'src/card-score/entities/card-score.entity';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { StudyNote } from 'src/study-note/entities/study-note.entity';
 import { User } from 'src/user/entities/user.entity';
@@ -38,4 +41,6 @@ export class StudyCard extends CoreEntity {
 
   @OneToMany(() => CardScore, (cardScores) => cardScores.studyCard)
   cardScores: StudyNote[];
+
+  myScore: CardScoreLevel = null;
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StudyNote } from './entities/study-note.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { StudyCard } from 'src/study-card/entities/study-card.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
@@ -19,6 +19,7 @@ import {
 } from './dtos/update-study-note.dto';
 import { Folder } from 'src/folder/entities/folder.entity';
 import { GetStudyNoteOutput } from './dtos/get-study-note.dto copy';
+import { CardScore } from 'src/card-score/entities/card-score.entity';
 
 @Injectable()
 export class StudyNoteService {
@@ -29,6 +30,8 @@ export class StudyNoteService {
     private readonly studyNotes: Repository<StudyNote>,
     @InjectRepository(StudyCard)
     private readonly studyCards: Repository<StudyCard>,
+    @InjectRepository(CardScore)
+    private readonly cardScores: Repository<CardScore>,
     @InjectRepository(User)
     private readonly users: Repository<User>,
   ) {}
@@ -107,7 +110,10 @@ export class StudyNoteService {
     }
   }
 
-  async getStudyNote(studyNoteId: number): Promise<GetStudyNoteOutput> {
+  async getStudyNote(
+    user: User,
+    studyNoteId: number,
+  ): Promise<GetStudyNoteOutput> {
     try {
       const studyNote = await this.studyNotes.findOne({
         where: {
@@ -122,6 +128,31 @@ export class StudyNoteService {
         .where('studyCard.id IN (:...ids)', { ids: studyNote.studyCardOrder })
         .orderBy(`CASE studyCard.id ${orderConditions} END`)
         .getMany();
+
+      if (user) {
+        const cardScores = await this.cardScores.find({
+          where: {
+            studyCard: {
+              id: In(studyNote.studyCardOrder),
+            },
+            user: {
+              id: user.id,
+            },
+          },
+          relations: {
+            studyCard: true,
+          },
+        });
+        studyCards.forEach((studyCard) => {
+          const cardScore = cardScores.find(
+            (cardScore) => cardScore.studyCard.id === studyCard.id,
+          );
+          if (cardScore) {
+            studyCard.myScore = cardScore.score;
+          }
+        });
+      }
+
       studyNote.studyCards = studyCards;
       if (!studyNote) {
         return {

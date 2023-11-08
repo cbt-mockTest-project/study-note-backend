@@ -39,8 +39,11 @@ export class StudyNoteController {
   }
 
   @Get(':id')
-  getStudyNote(@Param('id', ParseIntPipe) studyNoteId: string) {
-    return this.studyNoteService.getStudyNote(+studyNoteId);
+  getStudyNote(
+    @AuthUser() user: User,
+    @Param('id', ParseIntPipe) studyNoteId: string,
+  ) {
+    return this.studyNoteService.getStudyNote(user, +studyNoteId);
   }
 
   @Role(['any'])
