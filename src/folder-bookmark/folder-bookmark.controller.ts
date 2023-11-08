@@ -2,7 +2,7 @@ import { Controller, Delete, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { FolderBookmarkService } from './folder-bookmark.service';
 import { CoreOutput } from 'src/common/dtos/output.dto';
 import { AuthUser } from 'src/common/decorators/auth-user.decorator';
-import { User, UserRole } from 'src/user/entities/user.entity';
+import { User } from 'src/user/entities/user.entity';
 import { Role } from 'src/common/decorators/role.decorators';
 
 @Controller('folder-bookmark')

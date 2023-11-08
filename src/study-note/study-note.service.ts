@@ -18,6 +18,7 @@ import {
   UpdateStudyNoteOutput,
 } from './dto/update-study-note.dto';
 import { Folder } from 'src/folder/entities/folder.entity';
+import { GetStudyNoteOutput } from './dto/get-study-note.dto copy';
 
 @Injectable()
 export class StudyNoteService {
@@ -99,6 +100,41 @@ export class StudyNoteService {
         studyNotes,
       };
     } catch {
+      return {
+        ok: false,
+        error: '암기장을 불러오는데 실패했습니다.',
+      };
+    }
+  }
+
+  async getStudyNote(studyNoteId: number): Promise<GetStudyNoteOutput> {
+    try {
+      const studyNote = await this.studyNotes.findOne({
+        where: {
+          id: studyNoteId,
+        },
+      });
+      const orderConditions = studyNote.studyCardOrder
+        .map((id, order) => `WHEN ${id} THEN ${order}`)
+        .join(' ');
+      const studyCards = await this.studyCards
+        .createQueryBuilder('studyCard')
+        .where('studyCard.id IN (:...ids)', { ids: studyNote.studyCardOrder })
+        .orderBy(`CASE studyCard.id ${orderConditions} END`)
+        .getMany();
+      studyNote.studyCards = studyCards;
+      if (!studyNote) {
+        return {
+          ok: false,
+          error: '암기장을 찾을 수 없습니다.',
+        };
+      }
+      return {
+        ok: true,
+        studyNote,
+      };
+    } catch (e) {
+      console.log(e);
       return {
         ok: false,
         error: '암기장을 불러오는데 실패했습니다.',

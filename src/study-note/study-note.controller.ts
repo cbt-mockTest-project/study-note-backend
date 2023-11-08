@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { StudyNoteService } from './study-note.service';
 import { AuthUser } from 'src/common/decorators/auth-user.decorator';
-import { User, UserRole } from 'src/user/entities/user.entity';
+import { User } from 'src/user/entities/user.entity';
 import { CreateStudyNoteInput } from './dto/create-study-note.dto';
 import { GetStudyNotesInput } from './dto/get-study-notes.dto';
 import { UpdateStudyNoteInput } from './dto/update-study-note.dto';
@@ -36,6 +36,11 @@ export class StudyNoteController {
     @Query() getStudyNotesInput: GetStudyNotesInput,
   ) {
     return this.studyNoteService.getStudyNotes(user, getStudyNotesInput);
+  }
+
+  @Get(':id')
+  getStudyNote(@Param('id', ParseIntPipe) studyNoteId: string) {
+    return this.studyNoteService.getStudyNote(+studyNoteId);
   }
 
   @Role(['any'])
