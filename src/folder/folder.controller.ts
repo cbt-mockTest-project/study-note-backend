@@ -10,11 +10,11 @@ import {
   Query,
 } from '@nestjs/common';
 import { FolderService } from './folder.service';
-import { CreateFolderInput } from './dto/create-folder.dto';
+import { CreateFolderInput } from './dtos/create-folder.dto';
 import { AuthUser } from 'src/common/decorators/auth-user.decorator';
 import { User } from 'src/user/entities/user.entity';
-import { GetMyFoldersInput } from './dto/get-my-folders.dto';
-import { UpdateFolderInput } from './dto/update-folder.dto';
+import { GetMyFoldersInput } from './dtos/get-my-folders.dto';
+import { UpdateFolderInput } from './dtos/update-folder.dto';
 import { Role } from 'src/common/decorators/role.decorators';
 
 @Controller('folder')

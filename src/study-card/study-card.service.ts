@@ -5,14 +5,14 @@ import { User } from 'src/user/entities/user.entity';
 import {
   CreateStudyCardOutput,
   CreateStudyCardInput,
-} from './dto/create-study-card.dto';
+} from './dtos/create-study-card.dto';
 import { CoreOutput } from 'src/common/dtos/output.dto';
 import { StudyCard } from './entities/study-card.entity';
 import { StudyNote } from 'src/study-note/entities/study-note.entity';
 import {
   UpdateStudyCardInput,
   UpdateStudyCardOutput,
-} from './dto/update-study-card.dto';
+} from './dtos/update-study-card.dto';
 
 @Injectable()
 export class StudyCardService {

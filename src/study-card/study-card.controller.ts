@@ -10,8 +10,8 @@ import {
 import { StudyCardService } from './study-card.service';
 import { AuthUser } from 'src/common/decorators/auth-user.decorator';
 import { User, UserRole } from 'src/user/entities/user.entity';
-import { UpdateStudyCardInput } from './dto/update-study-card.dto';
-import { CreateStudyCardInput } from './dto/create-study-card.dto';
+import { UpdateStudyCardInput } from './dtos/update-study-card.dto';
+import { CreateStudyCardInput } from './dtos/create-study-card.dto';
 import { Role } from 'src/common/decorators/role.decorators';
 
 @Controller('study-card')

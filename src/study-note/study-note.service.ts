@@ -7,18 +7,18 @@ import { User } from 'src/user/entities/user.entity';
 import {
   CreateStudyNoteOutput,
   CreateStudyNoteInput,
-} from './dto/create-study-note.dto';
+} from './dtos/create-study-note.dto';
 import {
   GetStudyNotesInput,
   GetStudyNotesOutput,
-} from './dto/get-study-notes.dto';
+} from './dtos/get-study-notes.dto';
 import { CoreOutput } from 'src/common/dtos/output.dto';
 import {
   UpdateStudyNoteInput,
   UpdateStudyNoteOutput,
-} from './dto/update-study-note.dto';
+} from './dtos/update-study-note.dto';
 import { Folder } from 'src/folder/entities/folder.entity';
-import { GetStudyNoteOutput } from './dto/get-study-note.dto copy';
+import { GetStudyNoteOutput } from './dtos/get-study-note.dto copy';
 
 @Injectable()
 export class StudyNoteService {

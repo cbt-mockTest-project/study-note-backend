@@ -10,11 +10,11 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserInput } from './dto/create-user.dto';
-import { UpdateUserInput } from './dto/update-user.dto';
+import { CreateUserInput } from './dtos/create-user.dto';
+import { UpdateUserInput } from './dtos/update-user.dto';
 import { ProxyIp } from 'src/common/decorators/ip.decorator';
 import { Request, Response } from 'express';
-import { RefreshAuthTokenInput } from './dto/refresh-auth-token.dto';
+import { RefreshAuthTokenInput } from './dtos/refresh-auth-token.dto';
 import { AuthUser } from 'src/common/decorators/auth-user.decorator';
 import { User, UserRole } from './entities/user.entity';
 import { Role } from 'src/common/decorators/role.decorators';

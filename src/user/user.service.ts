@@ -1,21 +1,21 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UpdateUserInput, UpdateUserOutput } from './dto/update-user.dto';
+import { UpdateUserInput, UpdateUserOutput } from './dtos/update-user.dto';
 import { Response, Request } from 'express';
 import axios from 'axios';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LoginType, User } from './entities/user.entity';
-import { CreateUserInput, CreateUserOutput } from './dto/create-user.dto';
+import { CreateUserInput, CreateUserOutput } from './dtos/create-user.dto';
 import shortid from 'shortid';
 import { TokenService } from '../auth/token.service';
 import { parseCookies, setLoginCookie } from 'src/lib/util';
-import { MeOutput } from './dto/me.dto';
+import { MeOutput } from './dtos/me.dto';
 import { ConfigService } from '@nestjs/config';
-import { FindUserOutput } from './dto/find-user.dto';
+import { FindUserOutput } from './dtos/find-user.dto';
 import {
   RefreshAuthTokenInput,
   RefreshAuthTokenOutput,
-} from './dto/refresh-auth-token.dto';
+} from './dtos/refresh-auth-token.dto';
 
 @Injectable()
 export class UserService {

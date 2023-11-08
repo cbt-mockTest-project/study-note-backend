@@ -12,9 +12,9 @@ import {
 import { StudyNoteService } from './study-note.service';
 import { AuthUser } from 'src/common/decorators/auth-user.decorator';
 import { User } from 'src/user/entities/user.entity';
-import { CreateStudyNoteInput } from './dto/create-study-note.dto';
-import { GetStudyNotesInput } from './dto/get-study-notes.dto';
-import { UpdateStudyNoteInput } from './dto/update-study-note.dto';
+import { CreateStudyNoteInput } from './dtos/create-study-note.dto';
+import { GetStudyNotesInput } from './dtos/get-study-notes.dto';
+import { UpdateStudyNoteInput } from './dtos/update-study-note.dto';
 import { Role } from 'src/common/decorators/role.decorators';
 
 @Controller('study-note')

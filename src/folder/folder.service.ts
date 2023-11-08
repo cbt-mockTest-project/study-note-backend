@@ -4,16 +4,22 @@ import { Folder, FolderAccess } from './entities/folder.entity';
 import { Repository } from 'typeorm';
 import { StudyNote } from 'src/study-note/entities/study-note.entity';
 import { User } from 'src/user/entities/user.entity';
-import { CreateFolderOutput, CreateFolderInput } from './dto/create-folder.dto';
+import {
+  CreateFolderOutput,
+  CreateFolderInput,
+} from './dtos/create-folder.dto';
 import {
   GetMyFoldersInput,
   GetMyFoldersOutput,
-} from './dto/get-my-folders.dto';
+} from './dtos/get-my-folders.dto';
 import { CoreOutput } from 'src/common/dtos/output.dto';
-import { UpdateFolderInput, UpdateFolderOutput } from './dto/update-folder.dto';
+import {
+  UpdateFolderInput,
+  UpdateFolderOutput,
+} from './dtos/update-folder.dto';
 import { StudyCard } from 'src/study-card/entities/study-card.entity';
 import { FolderBookmark } from 'src/folder-bookmark/entities/folder-bookmark.entity';
-import { GetFolderOutput } from './dto/get-folder.dto';
+import { GetFolderOutput } from './dtos/get-folder.dto';
 
 @Injectable()
 export class FolderService {
