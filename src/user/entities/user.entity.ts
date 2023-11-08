@@ -1,6 +1,7 @@
 import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { FolderBookmark } from 'src/folder-bookmark/entities/folder-bookmark.entity';
+import { FolderLike } from 'src/folder-like/entities/folder-like.entity';
 import { Folder } from 'src/folder/entities/folder.entity';
 import { StudyCard } from 'src/study-card/entities/study-card.entity';
 import { StudyNote } from 'src/study-note/entities/study-note.entity';
@@ -51,4 +52,7 @@ export class User extends CoreEntity {
 
   @OneToMany(() => FolderBookmark, (folderBookmarks) => folderBookmarks.user)
   folderBookmarks: FolderBookmark[];
+
+  @OneToMany(() => FolderLike, (folderLikes) => folderLikes.user)
+  folderLikes: FolderLike[];
 }

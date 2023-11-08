@@ -1,6 +1,7 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { FolderBookmark } from 'src/folder-bookmark/entities/folder-bookmark.entity';
+import { FolderLike } from 'src/folder-like/entities/folder-like.entity';
 import { StudyNote } from 'src/study-note/entities/study-note.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
@@ -29,4 +30,7 @@ export class Folder extends CoreEntity {
 
   @OneToMany(() => FolderBookmark, (folderBookmark) => folderBookmark.folder)
   folderBookmarks: FolderBookmark[];
+
+  @OneToMany(() => FolderLike, (folderLike) => folderLike.folder)
+  folderLikes: FolderLike[];
 }
