@@ -4,10 +4,19 @@ import { Role } from 'src/common/decorators/role.decorators';
 import { AuthUser } from 'src/common/decorators/auth-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { SaveCardScoreInput } from './dtos/save-card-score.dto';
+import { ResetCardScoreInput } from './dtos/reset-card-score.dto';
 
 @Controller('card-score')
 export class CardScoreController {
   constructor(private readonly cardScoreService: CardScoreService) {}
+  @Role(['any'])
+  @Post('reset')
+  async resetCardScore(
+    @AuthUser() user: User,
+    @Body() resetCardScoreInput: ResetCardScoreInput,
+  ) {
+    return this.cardScoreService.resetCardScore(user, resetCardScoreInput);
+  }
 
   @Role(['any'])
   @Post(':id')

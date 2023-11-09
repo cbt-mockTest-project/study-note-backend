@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CardScore } from './entities/card-score.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { CoreOutput } from 'src/common/dtos/output.dto';
 import { User } from 'src/user/entities/user.entity';
 import { SaveCardScoreInput } from './dtos/save-card-score.dto';
 import { StudyCard } from 'src/study-card/entities/study-card.entity';
+import { ResetCardScoreInput } from './dtos/reset-card-score.dto';
 
 @Injectable()
 export class CardScoreService {
@@ -67,6 +68,33 @@ export class CardScoreService {
       return {
         ok: false,
         error: '점수를 저장할 수 없습니다.',
+      };
+    }
+  }
+  async resetCardScore(
+    user: User,
+    resetCardScoreInput: ResetCardScoreInput,
+  ): Promise<CoreOutput> {
+    const { studyCardId } = resetCardScoreInput;
+    const where: FindOptionsWhere<CardScore> = {
+      user: {
+        id: user.id,
+      },
+    };
+    if (studyCardId) {
+      where.studyCard = {
+        id: studyCardId,
+      };
+    }
+    try {
+      await this.cardScores.delete(where);
+      return {
+        ok: true,
+      };
+    } catch (e) {
+      return {
+        ok: false,
+        error: '점수를 초기화할 수 없습니다.',
       };
     }
   }
