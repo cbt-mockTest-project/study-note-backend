@@ -1,4 +1,5 @@
 import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
+import { CardComment } from 'src/card-comment/entites/card-comment.entity';
 import { CardScore } from 'src/card-score/entities/card-score.entity';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { FolderBookmark } from 'src/folder-bookmark/entities/folder-bookmark.entity';
@@ -82,4 +83,7 @@ export class User extends CoreEntity {
     (folderEditAccesses) => folderEditAccesses.user,
   )
   folderEditAccesses: FolderEditAccess[];
+
+  @OneToMany(() => CardComment, (cardComment) => cardComment.user)
+  cardComments: CardComment[];
 }

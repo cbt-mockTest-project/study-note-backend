@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { CardScoreModule } from './card-score/card-score.module';
 import { FolderReadAccessModule } from './folder-read-access/folder-read-access.module';
 import { FolderEditAccessModule } from './folder-edit-access/folder-edit-access.module';
+import { CardCommentModule } from './card-comment/card-comment.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { FolderEditAccessModule } from './folder-edit-access/folder-edit-access.
     CardScoreModule,
     FolderReadAccessModule,
     FolderEditAccessModule,
+    CardCommentModule,
   ],
   controllers: [],
   providers: [],
