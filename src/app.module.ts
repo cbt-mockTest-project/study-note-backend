@@ -10,6 +10,8 @@ import { FolderBookmarkModule } from './folder-bookmark/folder-bookmark.module';
 import { FolderLikeModule } from './folder-like/folder-like.module';
 import { AuthModule } from './auth/auth.module';
 import { CardScoreModule } from './card-score/card-score.module';
+import { FolderReadAccessModule } from './folder-read-access/folder-read-access.module';
+import { FolderEditAccessModule } from './folder-edit-access/folder-edit-access.module';
 
 @Module({
   imports: [
@@ -49,6 +51,8 @@ import { CardScoreModule } from './card-score/card-score.module';
     FolderLikeModule,
     AuthModule,
     CardScoreModule,
+    FolderReadAccessModule,
+    FolderEditAccessModule,
   ],
   controllers: [],
   providers: [],

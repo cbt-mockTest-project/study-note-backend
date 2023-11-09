@@ -3,6 +3,7 @@ import { CardScore } from 'src/card-score/entities/card-score.entity';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { FolderBookmark } from 'src/folder-bookmark/entities/folder-bookmark.entity';
 import { FolderLike } from 'src/folder-like/entities/folder-like.entity';
+import { FolderReadAccess } from 'src/folder-read-access/entities/folder-read-access.entity';
 import { Folder } from 'src/folder/entities/folder.entity';
 import { StudyCard } from 'src/study-card/entities/study-card.entity';
 import { StudyNote } from 'src/study-note/entities/study-note.entity';
@@ -68,4 +69,10 @@ export class User extends CoreEntity {
 
   @OneToMany(() => CardScore, (cardScores) => cardScores.user)
   cardScores: CardScore[];
+
+  @OneToMany(
+    () => FolderReadAccess,
+    (folderReadAccesses) => folderReadAccesses.user,
+  )
+  folderReadAccesses: FolderReadAccess[];
 }
