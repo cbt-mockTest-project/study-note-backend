@@ -1,6 +1,7 @@
 import { IsEnum, IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { FolderBookmark } from 'src/folder-bookmark/entities/folder-bookmark.entity';
+import { FolderEditAccess } from 'src/folder-edit-access/entities/folder-edit-access.entity';
 import { FolderLike } from 'src/folder-like/entities/folder-like.entity';
 import { FolderReadAccess } from 'src/folder-read-access/entities/folder-read-access.entity';
 import { StudyNote } from 'src/study-note/entities/study-note.entity';
@@ -39,4 +40,10 @@ export class Folder extends CoreEntity {
     (folderReadAccesses) => folderReadAccesses.folder,
   )
   folderReadAccesses: FolderReadAccess[];
+
+  @OneToMany(
+    () => FolderEditAccess,
+    (folderEditAccesses) => folderEditAccesses.folder,
+  )
+  folderEditAccesses: FolderEditAccess[];
 }

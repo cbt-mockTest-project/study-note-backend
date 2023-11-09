@@ -2,6 +2,7 @@ import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
 import { CardScore } from 'src/card-score/entities/card-score.entity';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { FolderBookmark } from 'src/folder-bookmark/entities/folder-bookmark.entity';
+import { FolderEditAccess } from 'src/folder-edit-access/entities/folder-edit-access.entity';
 import { FolderLike } from 'src/folder-like/entities/folder-like.entity';
 import { FolderReadAccess } from 'src/folder-read-access/entities/folder-read-access.entity';
 import { Folder } from 'src/folder/entities/folder.entity';
@@ -75,4 +76,10 @@ export class User extends CoreEntity {
     (folderReadAccesses) => folderReadAccesses.user,
   )
   folderReadAccesses: FolderReadAccess[];
+
+  @OneToMany(
+    () => FolderEditAccess,
+    (folderEditAccesses) => folderEditAccesses.user,
+  )
+  folderEditAccesses: FolderEditAccess[];
 }
