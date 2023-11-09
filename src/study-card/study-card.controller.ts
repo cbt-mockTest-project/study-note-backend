@@ -2,17 +2,20 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { StudyCardService } from './study-card.service';
 import { AuthUser } from 'src/common/decorators/auth-user.decorator';
-import { User, UserRole } from 'src/user/entities/user.entity';
+import { User } from 'src/user/entities/user.entity';
 import { UpdateStudyCardInput } from './dtos/update-study-card.dto';
 import { CreateStudyCardInput } from './dtos/create-study-card.dto';
 import { Role } from 'src/common/decorators/role.decorators';
+import { GetRandomStudyCardsInput } from './dtos/get-random-study-cards.dto';
 
 @Controller('study-card')
 export class StudyCardController {
@@ -23,7 +26,6 @@ export class StudyCardController {
   deleteStudyNote(@AuthUser() user: User, @Param('id') studyNoteId: string) {
     return this.studyCardService.deleteStudyCard(user, +studyNoteId);
   }
-
   @Role(['any'])
   @Patch(':id')
   updateStudyNote(
@@ -45,5 +47,17 @@ export class StudyCardController {
     @Body() createStudyCardInput: CreateStudyCardInput,
   ) {
     return this.studyCardService.createStudyCard(user, createStudyCardInput);
+  }
+
+  @Role(['any'])
+  @Get('random')
+  getRandomStudyCards(
+    @AuthUser() user: User,
+    @Query() getRandomStudyCardsInput: GetRandomStudyCardsInput,
+  ) {
+    return this.studyCardService.getRandomStudyCards(
+      user,
+      getRandomStudyCardsInput,
+    );
   }
 }

@@ -64,7 +64,6 @@ export class CardScoreService {
         ok: true,
       };
     } catch (e) {
-      console.log(e);
       return {
         ok: false,
         error: '점수를 저장할 수 없습니다.',

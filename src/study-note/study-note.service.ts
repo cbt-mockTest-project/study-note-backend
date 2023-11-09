@@ -165,7 +165,6 @@ export class StudyNoteService {
         studyNote,
       };
     } catch (e) {
-      console.log(e);
       return {
         ok: false,
         error: '암기장을 불러오는데 실패했습니다.',

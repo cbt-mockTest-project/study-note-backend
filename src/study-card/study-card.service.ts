@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 import {
   CreateStudyCardOutput,
@@ -13,6 +13,12 @@ import {
   UpdateStudyCardInput,
   UpdateStudyCardOutput,
 } from './dtos/update-study-card.dto';
+import {
+  GetRandomStudyCardsInput,
+  GetRandomStudyCardsOutput,
+} from './dtos/get-random-study-cards.dto';
+import { CardScore } from 'src/card-score/entities/card-score.entity';
+import { shuffle } from 'lodash';
 
 @Injectable()
 export class StudyCardService {
@@ -21,6 +27,8 @@ export class StudyCardService {
     private readonly studyNotes: Repository<StudyNote>,
     @InjectRepository(StudyCard)
     private readonly studyCards: Repository<StudyCard>,
+    @InjectRepository(CardScore)
+    private readonly cardScores: Repository<CardScore>,
     @InjectRepository(User)
     private readonly users: Repository<User>,
   ) {}
@@ -130,6 +138,57 @@ export class StudyCardService {
       return {
         ok: false,
         error: '카드를 수정하는데 실패했습니다.',
+      };
+    }
+  }
+
+  async getRandomStudyCards(
+    user: User,
+    getRandomStudyCardsInput: GetRandomStudyCardsInput,
+  ): Promise<GetRandomStudyCardsOutput> {
+    try {
+      const { studyNoteIds, limit, scores } = getRandomStudyCardsInput;
+      const studyNotes = await this.studyNotes.find({
+        where: {
+          id: In(studyNoteIds),
+        },
+        relations: { studyCards: true },
+      });
+
+      let studyCards: StudyCard[] = studyNotes.flatMap(
+        (note) => note.studyCards,
+      );
+      studyCards = shuffle(studyCards).slice(0, limit);
+
+      const studyCardIds: number[] = studyCards.map((el) => el.id);
+
+      const cardScores = await this.cardScores.find({
+        where: {
+          studyCard: In(studyCardIds),
+          user: {
+            id: user.id,
+          },
+        },
+        relations: {
+          studyCard: true,
+        },
+      });
+      studyCards = studyCards
+        .map((card) => ({
+          ...card,
+          myScore:
+            cardScores.find((score) => score.studyCard.id === card.id)?.score ||
+            null,
+        }))
+        .filter((card) => scores.length === 0 || scores.includes(card.myScore));
+      return {
+        ok: true,
+        studyCards,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: '카드를 가져오는데 실패했습니다.',
       };
     }
   }
