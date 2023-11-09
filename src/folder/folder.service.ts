@@ -178,7 +178,7 @@ export class FolderService {
     folderId: number,
     updateFolderInput: UpdateFolderInput,
   ): Promise<UpdateFolderOutput> {
-    const { access, name } = updateFolderInput;
+    const { access, name, description } = updateFolderInput;
     try {
       const folder = await this.folders.findOne({
         where: {
@@ -199,6 +199,9 @@ export class FolderService {
       }
       if (name) {
         folder.name = name;
+      }
+      if (typeof description === 'string') {
+        folder.description = description;
       }
       await this.folders.save(folder);
       return {

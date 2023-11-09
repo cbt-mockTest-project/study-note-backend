@@ -1,4 +1,4 @@
-import { IsEnum, IsString } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { FolderBookmark } from 'src/folder-bookmark/entities/folder-bookmark.entity';
 import { FolderEditAccess } from 'src/folder-edit-access/entities/folder-edit-access.entity';
@@ -18,6 +18,11 @@ export class Folder extends CoreEntity {
   @IsString()
   @Column()
   name: string;
+
+  @IsString()
+  @IsOptional()
+  @Column({ default: '' })
+  description: string;
 
   @IsEnum(FolderAccess)
   @Column({ type: 'enum', enum: FolderAccess })
