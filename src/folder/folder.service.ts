@@ -99,7 +99,7 @@ export class FolderService {
     getMyFoldersInput: GetMyFoldersInput,
   ): Promise<GetMyFoldersOutput> {
     try {
-      const { access, filter } = getMyFoldersInput;
+      const { filter } = getMyFoldersInput;
       let folders: Folder[] = [];
       if (filter === 'bookmark') {
         const folderBookmarks = await this.folderBookmarks.find({
@@ -122,7 +122,6 @@ export class FolderService {
       if (filter === 'me') {
         folders = await this.folders.find({
           where: {
-            access,
             user: {
               id: user.id,
             },
