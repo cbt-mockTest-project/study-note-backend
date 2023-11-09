@@ -35,10 +35,12 @@ export class StudyCardService {
 
   async createStudyCard(
     user: User,
+    studyNoteId: number,
     createStudyCardInput: CreateStudyCardInput,
   ): Promise<CreateStudyCardOutput> {
+    const queryRunner = this.studyCards.manager.connection.createQueryRunner();
     try {
-      const { question, question_img, answer, answer_img, studyNoteId } =
+      const { question, question_img, answer, answer_img, studyCardOrder } =
         createStudyCardInput;
       const studyNote = await this.studyNotes.findOne({
         where: {
@@ -54,7 +56,8 @@ export class StudyCardService {
           error: '암기장을 찾을 수 없습니다.',
         };
       }
-      const studyCard = await this.studyCards.save(
+      await queryRunner.startTransaction();
+      const studyCard = await queryRunner.manager.save(
         this.studyCards.create({
           question,
           question_img,
@@ -64,12 +67,20 @@ export class StudyCardService {
           user,
         }),
       );
+      await queryRunner.manager.update(
+        StudyNote,
+        { id: studyNoteId },
+        { studyCardOrder },
+      );
+
+      await queryRunner.commitTransaction();
 
       return {
         studyCard,
         ok: true,
       };
     } catch {
+      await queryRunner.rollbackTransaction();
       return {
         ok: false,
         error: '카드를 생성하는데 실패했습니다.',

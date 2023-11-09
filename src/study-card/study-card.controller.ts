@@ -28,7 +28,7 @@ export class StudyCardController {
   }
   @Role(['any'])
   @Patch(':id')
-  updateStudyNote(
+  updateStudyCard(
     @AuthUser() user: User,
     @Param('id', ParseIntPipe) studyNoteId: string,
     @Body() updateStudyCardInput: UpdateStudyCardInput,
@@ -41,12 +41,17 @@ export class StudyCardController {
   }
 
   @Role(['any'])
-  @Post('')
-  createStudyNote(
+  @Post(':id')
+  createStudyCard(
     @AuthUser() user: User,
+    @Param('id', ParseIntPipe) studyNoteId: string,
     @Body() createStudyCardInput: CreateStudyCardInput,
   ) {
-    return this.studyCardService.createStudyCard(user, createStudyCardInput);
+    return this.studyCardService.createStudyCard(
+      user,
+      +studyNoteId,
+      createStudyCardInput,
+    );
   }
 
   @Role(['any'])

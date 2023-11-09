@@ -123,6 +123,13 @@ export class StudyNoteService {
       const orderConditions = studyNote.studyCardOrder
         .map((id, order) => `WHEN ${id} THEN ${order}`)
         .join(' ');
+      if (studyNote.studyCardOrder.length === 0) {
+        studyNote.studyCards = [];
+        return {
+          ok: true,
+          studyNote,
+        };
+      }
       const studyCards = await this.studyCards
         .createQueryBuilder('studyCard')
         .where('studyCard.id IN (:...ids)', { ids: studyNote.studyCardOrder })

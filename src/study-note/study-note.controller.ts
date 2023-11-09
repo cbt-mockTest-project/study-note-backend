@@ -21,7 +21,7 @@ import { Role } from 'src/common/decorators/role.decorators';
 export class StudyNoteController {
   constructor(private readonly studyNoteService: StudyNoteService) {}
   @Role(['any'])
-  @Post()
+  @Post('')
   createStudyNote(
     @AuthUser() user: User,
     @Body() createStudyNoteInput: CreateStudyNoteInput,

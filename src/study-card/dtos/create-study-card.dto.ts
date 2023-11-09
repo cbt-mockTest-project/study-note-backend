@@ -1,6 +1,6 @@
 import { PickType } from '@nestjs/mapped-types';
 import { CoreOutput } from 'src/common/dtos/output.dto';
-import { IsNumber, IsOptional } from 'class-validator';
+import { IsArray, IsNumber, IsOptional } from 'class-validator';
 import { StudyCard } from '../entities/study-card.entity';
 
 export class CreateStudyCardInput extends PickType(StudyCard, [
@@ -9,8 +9,9 @@ export class CreateStudyCardInput extends PickType(StudyCard, [
   'question_img',
   'answer_img',
 ]) {
-  @IsNumber()
-  studyNoteId: number;
+  @IsArray()
+  @IsNumber({}, { each: true })
+  studyCardOrder: number[];
 }
 
 export class CreateStudyCardOutput extends CoreOutput {
