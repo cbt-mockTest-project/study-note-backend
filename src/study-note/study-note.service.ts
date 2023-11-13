@@ -20,6 +20,7 @@ import {
 import { Folder } from 'src/folder/entities/folder.entity';
 import { GetStudyNoteOutput } from './dtos/get-study-note.dto copy';
 import { CardScore } from 'src/card-score/entities/card-score.entity';
+import { GetMyStudyNotesOutput } from './dtos/get-my-study-notes.dto';
 
 @Injectable()
 export class StudyNoteService {
@@ -75,6 +76,27 @@ export class StudyNoteService {
       return {
         ok: false,
         error: '암기장을 생성하는데 실패했습니다.',
+      };
+    }
+  }
+
+  async getMyStudyNotes(user: User): Promise<GetMyStudyNotesOutput> {
+    try {
+      const studyNotes = await this.studyNotes.find({
+        where: {
+          user: {
+            id: user.id,
+          },
+        },
+      });
+      return {
+        ok: true,
+        studyNotes,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: '암기장을 불러오는데 실패했습니다.',
       };
     }
   }

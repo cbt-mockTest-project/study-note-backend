@@ -31,11 +31,17 @@ export class StudyNoteController {
 
   @Role(['any'])
   @Get('')
-  getMyStudyNotes(
+  getStudyNotes(
     @AuthUser() user: User,
     @Query() getStudyNotesInput: GetStudyNotesInput,
   ) {
     return this.studyNoteService.getStudyNotes(user, getStudyNotesInput);
+  }
+
+  @Role(['any'])
+  @Get('me')
+  getMyStudyNotes(@AuthUser() user: User) {
+    return this.studyNoteService.getMyStudyNotes(user);
   }
 
   @Get(':id')
