@@ -19,7 +19,9 @@ export class StudyNote extends CoreEntity {
   })
   user: User;
 
-  @ManyToMany(() => Folder, (folder) => folder.studyNotes)
+  @ManyToMany(() => Folder, (folder) => folder.studyNotes, {
+    onDelete: 'CASCADE',
+  })
   folders: Folder[];
 
   @OneToMany(() => StudyCard, (studyCard) => studyCard.studyNote)

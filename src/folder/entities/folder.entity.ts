@@ -38,7 +38,9 @@ export class Folder extends CoreEntity {
   @ManyToOne(() => User, (user) => user.folders, { onDelete: 'CASCADE' })
   user: User;
 
-  @ManyToMany(() => StudyNote, (studyNotes) => studyNotes.folders)
+  @ManyToMany(() => StudyNote, (studyNotes) => studyNotes.folders, {
+    onDelete: 'CASCADE',
+  })
   @JoinTable({ name: 'folder_and_studynote' })
   studyNotes: StudyNote[];
 
