@@ -6,9 +6,6 @@ import { IsArray, IsNumber, IsOptional } from 'class-validator';
 export class UpdateStudyNoteInput extends PartialType(
   PartialType(PickType(StudyNote, ['name'])),
 ) {
-  @IsOptional()
-  folderId?: number;
-
   @IsNumber({}, { each: true })
   @IsArray()
   @IsOptional()

@@ -21,6 +21,14 @@ import { Folder } from 'src/folder/entities/folder.entity';
 import { GetStudyNoteOutput } from './dtos/get-study-note.dto copy';
 import { CardScore } from 'src/card-score/entities/card-score.entity';
 import { GetMyStudyNotesOutput } from './dtos/get-my-study-notes.dto';
+import {
+  AddStudyNoteToFolderInput,
+  AddStudyNoteToFolderOutput,
+} from './dtos/add-study-note-to-folder.dto';
+import {
+  RemoveStudyNoteFromFolderInput,
+  RemoveStudyNoteFromFolderOutput,
+} from './dtos/remove-study-note-from-folder';
 
 @Injectable()
 export class StudyNoteService {
@@ -43,6 +51,10 @@ export class StudyNoteService {
   ): Promise<CreateStudyNoteOutput> {
     try {
       const { name, folderId } = createStudyNoteInput;
+      const studyNotes = this.studyNotes.create({
+        name,
+        user,
+      });
       if (folderId) {
         const folder = await this.folders.findOne({
           where: {
@@ -58,16 +70,9 @@ export class StudyNoteService {
             error: '폴더를 찾을 수 없습니다.',
           };
         }
+        studyNotes.folders = [folder];
       }
-      const studyNote = await this.studyNotes.save(
-        this.studyNotes.create({
-          name,
-          folder: {
-            id: folderId,
-          },
-          user,
-        }),
-      );
+      const studyNote = await this.studyNotes.save(studyNotes);
       return {
         ok: true,
         studyNote,
@@ -109,7 +114,7 @@ export class StudyNoteService {
       const { folderId } = getStudyNotesInput;
       const studyNotes = await this.studyNotes.find({
         where: {
-          folder: {
+          folders: {
             id: folderId,
           },
           user: {
@@ -234,7 +239,7 @@ export class StudyNoteService {
     studyNoteId: number,
     updateStudyNoteInput: UpdateStudyNoteInput,
   ): Promise<UpdateStudyNoteOutput> {
-    const { name, folderId, studyCardOrder } = updateStudyNoteInput;
+    const { name, studyCardOrder } = updateStudyNoteInput;
     try {
       const studyNote = await this.studyNotes.findOne({
         where: {
@@ -244,7 +249,7 @@ export class StudyNoteService {
           },
         },
         relations: {
-          folder: true,
+          folders: true,
         },
       });
       if (!studyNote) {
@@ -252,23 +257,6 @@ export class StudyNoteService {
           ok: false,
           error: '암기장을 찾을 수 없습니다.',
         };
-      }
-      if (folderId) {
-        const folder = await this.folders.findOne({
-          where: {
-            id: folderId,
-            user: {
-              id: user.id,
-            },
-          },
-        });
-        if (!folder) {
-          return {
-            ok: false,
-            error: '폴더를 찾을 수 없습니다.',
-          };
-        }
-        studyNote.folder = folder;
       }
       if (name) {
         studyNote.name = name;
@@ -284,6 +272,133 @@ export class StudyNoteService {
       return {
         ok: false,
         error: '암기장을 수정하는데 실패했습니다.',
+      };
+    }
+  }
+
+  async addStudyNoteToFolder(
+    user: User,
+    addStudyNoteToFolderInput: AddStudyNoteToFolderInput,
+  ): Promise<AddStudyNoteToFolderOutput> {
+    try {
+      const { studyNoteId, folderId } = addStudyNoteToFolderInput;
+      const studyNote = await this.studyNotes.findOne({
+        where: {
+          id: studyNoteId,
+          user: {
+            id: user.id,
+          },
+        },
+      });
+      if (!studyNote) {
+        return {
+          ok: false,
+          error: '암기장을 찾을 수 없습니다.',
+        };
+      }
+      const folder = await this.folders.findOne({
+        where: {
+          id: folderId,
+          user: {
+            id: user.id,
+          },
+        },
+      });
+      if (!folder) {
+        return {
+          ok: false,
+          error: '폴더를 찾을 수 없습니다.',
+        };
+      }
+      const exitingRelation = await this.studyNotes
+        .createQueryBuilder()
+        .relation(StudyNote, 'folders')
+        .of(studyNoteId)
+        .loadMany();
+      if (exitingRelation.find((relation) => relation.id === folderId)) {
+        return {
+          ok: false,
+          error: '이미 폴더에 추가되어 있습니다.',
+        };
+      }
+
+      await this.studyNotes
+        .createQueryBuilder()
+        .relation(StudyNote, 'folders')
+        .of(studyNoteId)
+        .add(folderId);
+      return {
+        ok: true,
+      };
+    } catch (e) {
+      console.log(e);
+      return {
+        ok: false,
+        error: '폴더를 추가하는데 실패했습니다.',
+      };
+    }
+  }
+
+  async removeStudyNoteFromFolder(
+    user: User,
+    removeStudyNoteFromFolderInput: RemoveStudyNoteFromFolderInput,
+  ): Promise<RemoveStudyNoteFromFolderOutput> {
+    try {
+      const { studyNoteId, folderId } = removeStudyNoteFromFolderInput;
+      const studyNote = await this.studyNotes.findOne({
+        where: {
+          id: studyNoteId,
+          user: {
+            id: user.id,
+          },
+        },
+      });
+      if (!studyNote) {
+        return {
+          ok: false,
+          error: '암기장을 찾을 수 없습니다.',
+        };
+      }
+      const folder = await this.folders.findOne({
+        where: {
+          id: folderId,
+          user: {
+            id: user.id,
+          },
+        },
+      });
+      if (!folder) {
+        return {
+          ok: false,
+          error: '폴더를 찾을 수 없습니다.',
+        };
+      }
+
+      const exitingRelation = await this.studyNotes
+        .createQueryBuilder()
+        .relation(StudyNote, 'folders')
+        .of(studyNoteId)
+        .loadMany();
+
+      if (!exitingRelation.find((relation) => relation.id === folderId)) {
+        return {
+          ok: false,
+          error: '폴더에 추가되어 있지 않습니다.',
+        };
+      }
+
+      await this.studyNotes
+        .createQueryBuilder()
+        .relation(StudyNote, 'folders')
+        .of(studyNoteId)
+        .remove(folderId);
+      return {
+        ok: true,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: '폴더를 삭제하는데 실패했습니다.',
       };
     }
   }

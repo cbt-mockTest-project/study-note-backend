@@ -16,6 +16,14 @@ import { CreateStudyNoteInput } from './dtos/create-study-note.dto';
 import { GetStudyNotesInput } from './dtos/get-study-notes.dto';
 import { UpdateStudyNoteInput } from './dtos/update-study-note.dto';
 import { Role } from 'src/common/decorators/role.decorators';
+import {
+  AddStudyNoteToFolderInput,
+  AddStudyNoteToFolderOutput,
+} from './dtos/add-study-note-to-folder.dto';
+import {
+  RemoveStudyNoteFromFolderInput,
+  RemoveStudyNoteFromFolderOutput,
+} from './dtos/remove-study-note-from-folder';
 
 @Controller('study-note')
 export class StudyNoteController {
@@ -69,6 +77,30 @@ export class StudyNoteController {
       user,
       +studyNoteId,
       updateStudyNoteInput,
+    );
+  }
+
+  @Role(['any'])
+  @Post('/add-to-folder')
+  addStudyNoteToFolder(
+    @AuthUser() user: User,
+    @Body() addStudyNoteToFolderInput: AddStudyNoteToFolderInput,
+  ): Promise<AddStudyNoteToFolderOutput> {
+    return this.studyNoteService.addStudyNoteToFolder(
+      user,
+      addStudyNoteToFolderInput,
+    );
+  }
+
+  @Role(['any'])
+  @Post('/remove-from-folder')
+  removeStudyNoteFromFolder(
+    @AuthUser() user: User,
+    @Body() removeStudyNoteFromFolderInput: RemoveStudyNoteFromFolderInput,
+  ): Promise<RemoveStudyNoteFromFolderOutput> {
+    return this.studyNoteService.removeStudyNoteFromFolder(
+      user,
+      removeStudyNoteFromFolderInput,
     );
   }
 }
