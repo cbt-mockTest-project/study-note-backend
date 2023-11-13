@@ -46,7 +46,7 @@ export class UploadService {
 
       return {
         ok: true,
-        url: `https://${BUCKET_NAME}.s3.amazonaws.com/${objectName}`,
+        url: `https://${BUCKET_NAME}.s3.ap-northeast-2.amazonaws.com/${objectName}`,
       };
     } catch (e) {
       return {
