@@ -8,11 +8,13 @@ import {
 import { UploadService } from './upload.service';
 import { UploadImageInput } from './dtos/uploadImage.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Role } from 'src/common/decorators/role.decorators';
 
 @Controller('upload')
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
+  @Role(['any'])
   @Post('')
   @UseInterceptors(FileInterceptor('file'))
   uploadImage(
