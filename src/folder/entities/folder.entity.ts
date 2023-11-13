@@ -6,7 +6,14 @@ import { FolderLike } from 'src/folder-like/entities/folder-like.entity';
 import { FolderReadAccess } from 'src/folder-read-access/entities/folder-read-access.entity';
 import { StudyNote } from 'src/study-note/entities/study-note.entity';
 import { User } from 'src/user/entities/user.entity';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 
 export enum FolderAccess {
   PUBLIC = 'public',
@@ -31,7 +38,8 @@ export class Folder extends CoreEntity {
   @ManyToOne(() => User, (user) => user.folders, { onDelete: 'CASCADE' })
   user: User;
 
-  @OneToMany(() => StudyNote, (studyNotes) => studyNotes.folder)
+  @ManyToMany(() => StudyNote, (studyNotes) => studyNotes.folders)
+  @JoinTable({ name: 'folder_and_studynote' })
   studyNotes: StudyNote[];
 
   @OneToMany(() => FolderBookmark, (folderBookmark) => folderBookmark.folder)

@@ -3,7 +3,7 @@ import { CoreEntity } from 'src/common/entities/core.entity';
 import { Folder } from 'src/folder/entities/folder.entity';
 import { StudyCard } from 'src/study-card/entities/study-card.entity';
 import { User } from 'src/user/entities/user.entity';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity()
 export class StudyNote extends CoreEntity {
@@ -19,8 +19,8 @@ export class StudyNote extends CoreEntity {
   })
   user: User;
 
-  @ManyToOne(() => Folder, (folder) => folder.studyNotes, { nullable: true })
-  folder: Folder;
+  @ManyToMany(() => Folder, (folder) => folder.studyNotes)
+  folders: Folder[];
 
   @OneToMany(() => StudyCard, (studyCard) => studyCard.studyNote)
   studyCards: StudyCard[];
