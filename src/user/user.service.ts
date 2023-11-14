@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LoginType, User } from './entities/user.entity';
 import { CreateUserInput, CreateUserOutput } from './dtos/create-user.dto';
-import shortid from 'shortid';
+import { v4 as uuidv4 } from 'uuid';
 import { TokenService } from '../auth/token.service';
 import { parseCookies, setLoginCookie } from 'src/lib/util';
 import { MeOutput } from './dtos/me.dto';
@@ -63,7 +63,7 @@ export class UserService {
         if (foundUser.nickname === createUserInput.nickname) {
           createUserInput.nickname = `${
             createUserInput.nickname
-          }#${shortid.generate()}`;
+          }#${uuidv4().slice(0, 5)}`;
         }
       }
       const user = await this.users.save(this.users.create(createUserInput));
@@ -71,7 +71,7 @@ export class UserService {
         ok: true,
         id: user.id,
       };
-    } catch {
+    } catch (e) {
       return {
         ok: false,
         error: '계정 생성에 실패했습니다.',
@@ -208,13 +208,94 @@ export class UserService {
       });
       let userId: number;
       if (!user) {
-        const user = await this.createUser({
+        const res = await this.createUser({
           email,
           picture,
           nickname: name,
           loginType: LoginType.GOOGLE,
         });
+        if (res.error) {
+          return {
+            ok: false,
+            error: res.error,
+          };
+        }
+        userId = res.id;
+      } else {
         userId = user.id;
+      }
+
+      const accessToken = await this.tokenService.getAccessToken(userId);
+      const refreshToken = await this.tokenService.getRefreshToken(userId);
+      await this.updateUser(userId, { refreshToken });
+      setLoginCookie(res, accessToken, refreshToken);
+      res.redirect(
+        `${this.configService.get('FRONTEND_URL')}${cookies.redirect || '/'}`,
+      );
+    } catch (e) {
+      return {
+        ok: false,
+        error: '로그인에 실패했습니다.',
+      };
+    }
+  }
+
+  async kakaoLogin(req: Request, res: Response) {
+    try {
+      const cookies = parseCookies(req.headers.cookie);
+      const code = req.url.split('code=').at(-1).split('&').at(0);
+      const {
+        data: { access_token },
+      } = await axios.post(
+        'https://kauth.kakao.com/oauth/token',
+        {
+          grant_type: 'authorization_code',
+          client_id: this.configService.get('KAKAO_REST_API_KEY'),
+          redirect_uri: this.configService.get('KAKAO_REDIRECT_URI'),
+          code,
+        },
+        {
+          headers: {
+            'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+          },
+        },
+      );
+      if (!access_token) {
+        throw new UnauthorizedException('No data from kakao');
+      }
+      const { data: userData } = await axios.get(
+        'https://kapi.kakao.com/v2/user/me',
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+            'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+          },
+        },
+      );
+      if (!userData) {
+        throw new UnauthorizedException('No data from kakao');
+      }
+      const { email, profile } = userData.kakao_account;
+      const user = await this.users.findOne({
+        where: {
+          email,
+        },
+      });
+      let userId: number;
+      if (!user) {
+        const res = await this.createUser({
+          email,
+          picture: profile.profile_image_url,
+          nickname: profile.nickname,
+          loginType: LoginType.KAKAO,
+        });
+        if (res.error) {
+          return {
+            ok: false,
+            error: res.error,
+          };
+        }
+        userId = res.id;
       } else {
         userId = user.id;
       }

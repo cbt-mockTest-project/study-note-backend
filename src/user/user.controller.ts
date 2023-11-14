@@ -47,6 +47,11 @@ export class UserController {
     return this.userService.googleLogin(req, res);
   }
 
+  @Get('login/kakao')
+  async kakaoLogin(@Req() req: Request, @Res() res: Response) {
+    return this.userService.kakaoLogin(req, res);
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: string) {
     return this.userService.findUser(+id);
