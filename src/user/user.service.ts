@@ -87,6 +87,17 @@ export class UserService {
       const { nickname, picture, refreshToken } = updateUserInpt;
       const updateData: UpdateUserInput = {};
       if (nickname) {
+        const existUser = await this.users.findOne({
+          where: {
+            nickname,
+          },
+        });
+        if (existUser) {
+          return {
+            ok: false,
+            error: '이미 존재하는 닉네임입니다.',
+          };
+        }
         updateData.nickname = nickname;
       }
       if (picture) {
@@ -103,6 +114,20 @@ export class UserService {
       return {
         ok: false,
         error: '계정 업데이트에 실패했습니다.',
+      };
+    }
+  }
+
+  async deleteUser(id: number) {
+    try {
+      await this.users.delete(id);
+      return {
+        ok: true,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: '계정 삭제에 실패했습니다.',
       };
     }
   }

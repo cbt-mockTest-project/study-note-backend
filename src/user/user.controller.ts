@@ -8,6 +8,7 @@ import {
   Req,
   Res,
   ParseIntPipe,
+  Delete,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserInput } from './dtos/create-user.dto';
@@ -16,7 +17,7 @@ import { ProxyIp } from 'src/common/decorators/ip.decorator';
 import { Request, Response } from 'express';
 import { RefreshAuthTokenInput } from './dtos/refresh-auth-token.dto';
 import { AuthUser } from 'src/common/decorators/auth-user.decorator';
-import { User, UserRole } from './entities/user.entity';
+import { User } from './entities/user.entity';
 import { Role } from 'src/common/decorators/role.decorators';
 
 @Controller('user')
@@ -28,12 +29,16 @@ export class UserController {
     return this.userService.createUser(createUserDto);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id', ParseIntPipe) id: string,
-    @Body() updateUserInput: UpdateUserInput,
-  ) {
-    return this.userService.updateUser(+id, updateUserInput);
+  @Role(['any'])
+  @Patch('')
+  update(@AuthUser() user: User, @Body() updateUserInput: UpdateUserInput) {
+    return this.userService.updateUser(user.id, updateUserInput);
+  }
+
+  @Role(['any'])
+  @Delete('')
+  delete(@AuthUser() user: User) {
+    return this.userService.deleteUser(user.id);
   }
 
   @Role(['any'])
