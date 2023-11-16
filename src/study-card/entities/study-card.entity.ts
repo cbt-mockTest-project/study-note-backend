@@ -12,7 +12,8 @@ import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 @Entity()
 export class StudyCard extends CoreEntity {
   @IsString()
-  @Column()
+  @IsOptional()
+  @Column({ default: '' })
   question: string;
 
   @IsString()

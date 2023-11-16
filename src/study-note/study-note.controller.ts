@@ -12,7 +12,7 @@ import {
 import { StudyNoteService } from './study-note.service';
 import { AuthUser } from 'src/common/decorators/auth-user.decorator';
 import { User } from 'src/user/entities/user.entity';
-import { CreateStudyNoteInput } from './dtos/create-study-note.dto';
+import { SaveStudyNoteInput } from './dtos/save-study-note.dto';
 import { GetStudyNotesInput } from './dtos/get-study-notes.dto';
 import { UpdateStudyNoteInput } from './dtos/update-study-note.dto';
 import { Role } from 'src/common/decorators/role.decorators';
@@ -32,9 +32,9 @@ export class StudyNoteController {
   @Post('')
   createStudyNote(
     @AuthUser() user: User,
-    @Body() createStudyNoteInput: CreateStudyNoteInput,
+    @Body() createStudyNoteInput: SaveStudyNoteInput,
   ) {
-    return this.studyNoteService.createStudyNote(user, createStudyNoteInput);
+    return this.studyNoteService.saveStudyNote(user, createStudyNoteInput);
   }
 
   @Role(['any'])

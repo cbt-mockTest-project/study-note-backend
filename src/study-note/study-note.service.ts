@@ -5,9 +5,9 @@ import { In, Repository } from 'typeorm';
 import { StudyCard } from 'src/study-card/entities/study-card.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
-  CreateStudyNoteOutput,
-  CreateStudyNoteInput,
-} from './dtos/create-study-note.dto';
+  SaveStudyNoteOutput,
+  SaveStudyNoteInput,
+} from './dtos/save-study-note.dto';
 import {
   GetStudyNotesInput,
   GetStudyNotesOutput,
@@ -45,39 +45,52 @@ export class StudyNoteService {
     private readonly users: Repository<User>,
   ) {}
 
-  async createStudyNote(
+  async saveStudyNote(
     user: User,
-    createStudyNoteInput: CreateStudyNoteInput,
-  ): Promise<CreateStudyNoteOutput> {
+    createStudyNoteInput: SaveStudyNoteInput,
+  ): Promise<SaveStudyNoteOutput> {
     try {
-      const { name, folderId } = createStudyNoteInput;
-      const studyNotes = this.studyNotes.create({
+      if (!user) {
+        return {
+          ok: false,
+          error: '로그인이 필요합니다.',
+        };
+      }
+      const { name, folderId, cards, id } = createStudyNoteInput;
+      if (!cards.length) {
+        return {
+          ok: false,
+          error: '카드를 하나 이상 추가해주세요.',
+        };
+      }
+      const createdStudyNote = this.studyNotes.create({
+        id,
         name,
         user,
-      });
-      if (folderId) {
-        const folder = await this.folders.findOne({
-          where: {
+        folders: [
+          {
             id: folderId,
-            user: {
-              id: user.id,
-            },
           },
-        });
-        if (!folder) {
-          return {
-            ok: false,
-            error: '폴더를 찾을 수 없습니다.',
-          };
-        }
-        studyNotes.folders = [folder];
-      }
-      const studyNote = await this.studyNotes.save(studyNotes);
+        ],
+        studyCardOrder: [],
+      });
+      let studyNote = await this.studyNotes.save(createdStudyNote);
+      const createdCards = cards.map((card) =>
+        this.studyCards.create({
+          ...card,
+          studyNote: {
+            id: studyNote.id,
+          },
+        }),
+      );
+      const studyCards = await this.studyCards.save(createdCards);
+      createdStudyNote.studyCardOrder = studyCards.map((card) => card.id);
+      studyNote = await this.studyNotes.save(createdStudyNote);
       return {
         ok: true,
         studyNote,
       };
-    } catch {
+    } catch (e) {
       return {
         ok: false,
         error: '암기장을 생성하는데 실패했습니다.',
@@ -331,7 +344,6 @@ export class StudyNoteService {
         ok: true,
       };
     } catch (e) {
-      console.log(e);
       return {
         ok: false,
         error: '폴더를 추가하는데 실패했습니다.',
