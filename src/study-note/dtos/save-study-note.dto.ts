@@ -20,11 +20,15 @@ class CardInfo extends PickType(StudyCard, [
   @IsOptional()
   @IsNumber()
   id: number;
+
+  @IsOptional()
+  @IsNumber()
+  noteId: number;
 }
 export class SaveStudyNoteInput {
   @IsOptional()
   @IsNumber()
-  id: number;
+  noteId: number;
 
   @IsString()
   name: string;

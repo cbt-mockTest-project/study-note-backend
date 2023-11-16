@@ -49,22 +49,41 @@ export class StudyNoteService {
     user: User,
     saveStudyNoteInput: SaveStudyNoteInput,
   ): Promise<SaveStudyNoteOutput> {
+    const queryRunner = this.studyCards.manager.connection.createQueryRunner();
     try {
+      await queryRunner.startTransaction();
       if (!user) {
         return {
           ok: false,
           error: '로그인이 필요합니다.',
         };
       }
-      const { name, folderId, studyCards, id } = saveStudyNoteInput;
+
+      const { name, folderId, studyCards, noteId } = saveStudyNoteInput;
       if (!studyCards.length) {
         return {
           ok: false,
           error: '카드를 하나 이상 추가해주세요.',
         };
       }
+      if (noteId) {
+        const existingStudyNote = await this.studyNotes.findOne({
+          where: {
+            id: noteId,
+            user: {
+              id: user.id,
+            },
+          },
+        });
+        if (!existingStudyNote) {
+          return {
+            ok: false,
+            error: '암기장을 찾을 수 없습니다.',
+          };
+        }
+      }
       const createdStudyNote = this.studyNotes.create({
-        id,
+        id: noteId,
         name,
         user,
         folders: [
@@ -74,23 +93,38 @@ export class StudyNoteService {
         ],
         studyCardOrder: [],
       });
-      let studyNote = await this.studyNotes.save(createdStudyNote);
+      let studyNote = await queryRunner.manager.save(createdStudyNote);
+      const isMismatchingNote = studyCards.some(
+        (card) => card.noteId && card.noteId !== studyNote.id,
+      );
+      if (isMismatchingNote) {
+        return {
+          ok: false,
+          error: '카드에 암기장 정보가 일치하지 않습니다.',
+        };
+      }
+
       const createdCards = studyCards.map((card) =>
         this.studyCards.create({
           ...card,
           studyNote: {
             id: studyNote.id,
           },
+          user: {
+            id: user.id,
+          },
         }),
       );
-      const savedStudyCards = await this.studyCards.save(createdCards);
+      const savedStudyCards = await queryRunner.manager.save(createdCards);
       createdStudyNote.studyCardOrder = savedStudyCards.map((card) => card.id);
-      studyNote = await this.studyNotes.save(createdStudyNote);
+      studyNote = await queryRunner.manager.save(createdStudyNote);
+      await queryRunner.commitTransaction();
       return {
         ok: true,
         studyNote,
       };
     } catch (e) {
+      await queryRunner.rollbackTransaction();
       return {
         ok: false,
         error: '암기장을 생성하는데 실패했습니다.',
