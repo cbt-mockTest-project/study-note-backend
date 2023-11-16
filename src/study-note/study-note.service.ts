@@ -47,7 +47,7 @@ export class StudyNoteService {
 
   async saveStudyNote(
     user: User,
-    createStudyNoteInput: SaveStudyNoteInput,
+    saveStudyNoteInput: SaveStudyNoteInput,
   ): Promise<SaveStudyNoteOutput> {
     try {
       if (!user) {
@@ -56,8 +56,8 @@ export class StudyNoteService {
           error: '로그인이 필요합니다.',
         };
       }
-      const { name, folderId, cards, id } = createStudyNoteInput;
-      if (!cards.length) {
+      const { name, folderId, studyCards, id } = saveStudyNoteInput;
+      if (!studyCards.length) {
         return {
           ok: false,
           error: '카드를 하나 이상 추가해주세요.',
@@ -75,7 +75,7 @@ export class StudyNoteService {
         studyCardOrder: [],
       });
       let studyNote = await this.studyNotes.save(createdStudyNote);
-      const createdCards = cards.map((card) =>
+      const createdCards = studyCards.map((card) =>
         this.studyCards.create({
           ...card,
           studyNote: {
@@ -83,8 +83,8 @@ export class StudyNoteService {
           },
         }),
       );
-      const studyCards = await this.studyCards.save(createdCards);
-      createdStudyNote.studyCardOrder = studyCards.map((card) => card.id);
+      const savedStudyCards = await this.studyCards.save(createdCards);
+      createdStudyNote.studyCardOrder = savedStudyCards.map((card) => card.id);
       studyNote = await this.studyNotes.save(createdStudyNote);
       return {
         ok: true,

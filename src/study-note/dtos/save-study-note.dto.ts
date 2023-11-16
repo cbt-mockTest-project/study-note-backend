@@ -35,7 +35,7 @@ export class SaveStudyNoteInput {
   @IsArray()
   @ValidateNested()
   @Type(() => CardInfo)
-  cards: CardInfo[] = [];
+  studyCards: CardInfo[] = [];
 }
 
 export class SaveStudyNoteOutput extends CoreOutput {
