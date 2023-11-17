@@ -85,6 +85,8 @@ export class StudyCardService {
         ok: false,
         error: '카드를 생성하는데 실패했습니다.',
       };
+    } finally {
+      await queryRunner.release();
     }
   }
 
