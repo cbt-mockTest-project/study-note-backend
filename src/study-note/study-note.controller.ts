@@ -47,6 +47,15 @@ export class StudyNoteController {
   }
 
   @Role(['any'])
+  @Get('edit/:id')
+  getStudyNoteForEdit(
+    @AuthUser() user: User,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.studyNoteService.getStudyNoteForEdit(user, +id);
+  }
+
+  @Role(['any'])
   @Get('me')
   getMyStudyNotes(@AuthUser() user: User) {
     return this.studyNoteService.getMyStudyNotes(user);

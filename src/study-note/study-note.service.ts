@@ -29,6 +29,7 @@ import {
   RemoveStudyNoteFromFolderInput,
   RemoveStudyNoteFromFolderOutput,
 } from './dtos/remove-study-note-from-folder';
+import { GetStudyNoteForEditOutput } from './dtos/get-study-note-for-edit.dto';
 
 @Injectable()
 export class StudyNoteService {
@@ -129,6 +130,8 @@ export class StudyNoteService {
         ok: false,
         error: '암기장을 생성하는데 실패했습니다.',
       };
+    } finally {
+      await queryRunner.release();
     }
   }
 
@@ -175,6 +178,44 @@ export class StudyNoteService {
       return {
         ok: true,
         studyNotes,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: '암기장을 불러오는데 실패했습니다.',
+      };
+    }
+  }
+
+  async getStudyNoteForEdit(
+    user: User,
+    id: number,
+  ): Promise<GetStudyNoteForEditOutput> {
+    const studyNote = await this.studyNotes.findOne({
+      where: {
+        id,
+        user: {
+          id: user.id,
+        },
+      },
+      relations: {
+        studyCards: true,
+      },
+    });
+    if (!studyNote) {
+      return {
+        ok: false,
+        error: '암기장을 찾을 수 없습니다.',
+      };
+    }
+    studyNote.studyCards = this.sortStudyCards(
+      studyNote.studyCards,
+      studyNote.studyCardOrder,
+    );
+    try {
+      return {
+        ok: true,
+        studyNote,
       };
     } catch {
       return {
@@ -447,5 +488,19 @@ export class StudyNoteService {
         error: '폴더를 삭제하는데 실패했습니다.',
       };
     }
+  }
+
+  sortStudyCards(
+    studyCards: StudyCard[],
+    studyCardOrder: number[],
+  ): StudyCard[] {
+    const cardMap = new Map<number, StudyCard>();
+    studyCards.forEach((card) => {
+      cardMap.set(card.id, card);
+    });
+    const sortedCards = studyCardOrder
+      .map((id) => cardMap.get(id))
+      .filter((card) => card !== undefined) as StudyCard[];
+    return sortedCards;
   }
 }
