@@ -14,9 +14,9 @@ import {
   UpdateStudyCardOutput,
 } from './dtos/update-study-card.dto';
 import {
-  GetRandomStudyCardsInput,
-  GetRandomStudyCardsOutput,
-} from './dtos/get-random-study-cards.dto';
+  GetStudyCardsFromNoteIdsInput,
+  GetStudyCardsFromNoteIdsOutput,
+} from './dtos/get-study-cards-from-note-ids.dto';
 import { CardScore } from 'src/card-score/entities/card-score.entity';
 import { shuffle } from 'lodash';
 
@@ -155,12 +155,12 @@ export class StudyCardService {
     }
   }
 
-  async getRandomStudyCards(
+  async getStudyCardsFromNoteIds(
     user: User,
-    getRandomStudyCardsInput: GetRandomStudyCardsInput,
-  ): Promise<GetRandomStudyCardsOutput> {
+    getRandomStudyCardsInput: GetStudyCardsFromNoteIdsInput,
+  ): Promise<GetStudyCardsFromNoteIdsOutput> {
     try {
-      const { studyNoteIds, limit, scores } = getRandomStudyCardsInput;
+      const { studyNoteIds, limit, scores, mode } = getRandomStudyCardsInput;
       const studyNotes = await this.studyNotes.find({
         where: {
           id: In(studyNoteIds),
@@ -168,10 +168,19 @@ export class StudyCardService {
         relations: { studyCards: true },
       });
 
-      let studyCards: StudyCard[] = studyNotes.flatMap(
-        (note) => note.studyCards,
-      );
-      studyCards = shuffle(studyCards).slice(0, limit);
+      let studyCards: StudyCard[] = [];
+
+      if (mode === 'random') {
+        studyCards = studyNotes.flatMap((note) => note.studyCards);
+        studyCards = shuffle(studyCards).slice(0, limit);
+      }
+      if (mode === 'normal') {
+        studyNotes.forEach((note) => {
+          studyCards = studyCards.concat(
+            this.sortStudyCards(note.studyCards, note.studyCardOrder),
+          );
+        });
+      }
 
       const studyCardIds: number[] = studyCards.map((el) => el.id);
 
@@ -204,5 +213,19 @@ export class StudyCardService {
         error: '카드를 가져오는데 실패했습니다.',
       };
     }
+  }
+
+  sortStudyCards(
+    studyCards: StudyCard[],
+    studyCardOrder: number[],
+  ): StudyCard[] {
+    const cardMap = new Map<number, StudyCard>();
+    studyCards.forEach((card) => {
+      cardMap.set(card.id, card);
+    });
+    const sortedCards = studyCardOrder
+      .map((id) => cardMap.get(id))
+      .filter((card) => card !== undefined) as StudyCard[];
+    return sortedCards;
   }
 }

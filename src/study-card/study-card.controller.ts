@@ -15,7 +15,7 @@ import { User } from 'src/user/entities/user.entity';
 import { UpdateStudyCardInput } from './dtos/update-study-card.dto';
 import { CreateStudyCardInput } from './dtos/create-study-card.dto';
 import { Role } from 'src/common/decorators/role.decorators';
-import { GetRandomStudyCardsInput } from './dtos/get-random-study-cards.dto';
+import { GetStudyCardsFromNoteIdsInput } from './dtos/get-study-cards-from-note-ids.dto';
 
 @Controller('study-card')
 export class StudyCardController {
@@ -55,14 +55,14 @@ export class StudyCardController {
   }
 
   @Role(['any'])
-  @Get('random')
-  getRandomStudyCards(
+  @Get('')
+  getStudyCardsFromNoteIds(
     @AuthUser() user: User,
-    @Query() getRandomStudyCardsInput: GetRandomStudyCardsInput,
+    @Query() getStudyCardsFromNoteIdsInput: GetStudyCardsFromNoteIdsInput,
   ) {
-    return this.studyCardService.getRandomStudyCards(
+    return this.studyCardService.getStudyCardsFromNoteIds(
       user,
-      getRandomStudyCardsInput,
+      getStudyCardsFromNoteIdsInput,
     );
   }
 }

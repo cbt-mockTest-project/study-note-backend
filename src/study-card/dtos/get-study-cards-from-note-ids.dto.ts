@@ -1,10 +1,16 @@
 import { Transform } from 'class-transformer';
-import { IsArray, IsEnum, IsNumber, IsOptional } from 'class-validator';
+import {
+  IsArray,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { CardScoreLevel } from 'src/card-score/entities/card-score.entity';
 import { CoreOutput } from 'src/common/dtos/output.dto';
 import { StudyCard } from '../entities/study-card.entity';
 
-export class GetRandomStudyCardsInput {
+export class GetStudyCardsFromNoteIdsInput {
   @Transform(
     ({ value }) => (value ? value.split(',').map((el) => Number(el)) : []),
     {
@@ -14,6 +20,13 @@ export class GetRandomStudyCardsInput {
   @IsNumber({}, { each: true })
   @IsArray()
   studyNoteIds: number[];
+
+  @IsString()
+  @IsOptional()
+  @Transform(({ value }) => (value === 'random' ? 'random' : 'normal'), {
+    toClassOnly: true,
+  })
+  mode: 'random' | 'normal' = 'normal';
 
   @Transform(({ value }) => (value ? +value : 0), { toClassOnly: true })
   @IsNumber()
@@ -27,7 +40,7 @@ export class GetRandomStudyCardsInput {
   scores: CardScoreLevel[] = [];
 }
 
-export class GetRandomStudyCardsOutput extends CoreOutput {
+export class GetStudyCardsFromNoteIdsOutput extends CoreOutput {
   @IsArray()
   @IsOptional()
   studyCards?: StudyCard[];
