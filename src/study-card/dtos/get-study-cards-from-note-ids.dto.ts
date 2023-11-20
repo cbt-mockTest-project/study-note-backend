@@ -30,6 +30,7 @@ export class GetStudyCardsFromNoteIdsInput {
 
   @Transform(({ value }) => (value ? +value : 0), { toClassOnly: true })
   @IsNumber()
+  @IsOptional()
   limit: number;
 
   @Transform(({ value }) => (value ? value.split(',') : []), {

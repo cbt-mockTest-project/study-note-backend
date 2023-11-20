@@ -172,7 +172,7 @@ export class StudyCardService {
 
       if (mode === 'random') {
         studyCards = studyNotes.flatMap((note) => note.studyCards);
-        studyCards = shuffle(studyCards).slice(0, limit);
+        studyCards = shuffle(studyCards);
       }
       if (mode === 'normal') {
         studyNotes.forEach((note) => {
@@ -181,6 +181,8 @@ export class StudyCardService {
           );
         });
       }
+
+      if (limit) studyCards = studyCards.slice(0, limit);
 
       const studyCardIds: number[] = studyCards.map((el) => el.id);
 
