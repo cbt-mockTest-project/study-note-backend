@@ -26,7 +26,7 @@ export class GetStudyCardsFromNoteIdsInput {
   @Transform(({ value }) => (value === 'random' ? 'random' : 'normal'), {
     toClassOnly: true,
   })
-  mode: 'random' | 'normal' = 'normal';
+  order: 'random' | 'normal' = 'normal';
 
   @Transform(({ value }) => (value ? +value : 0), { toClassOnly: true })
   @IsNumber()

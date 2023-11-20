@@ -160,7 +160,7 @@ export class StudyCardService {
     getRandomStudyCardsInput: GetStudyCardsFromNoteIdsInput,
   ): Promise<GetStudyCardsFromNoteIdsOutput> {
     try {
-      const { studyNoteIds, limit, scores, mode } = getRandomStudyCardsInput;
+      const { studyNoteIds, limit, scores, order } = getRandomStudyCardsInput;
       const studyNotes = await this.studyNotes.find({
         where: {
           id: In(studyNoteIds),
@@ -170,18 +170,17 @@ export class StudyCardService {
 
       let studyCards: StudyCard[] = [];
 
-      if (mode === 'random') {
+      if (order === 'random') {
         studyCards = studyNotes.flatMap((note) => note.studyCards);
         studyCards = shuffle(studyCards);
       }
-      if (mode === 'normal') {
+      if (order === 'normal') {
         studyNotes.forEach((note) => {
           studyCards = studyCards.concat(
             this.sortStudyCards(note.studyCards, note.studyCardOrder),
           );
         });
       }
-
       if (limit) studyCards = studyCards.slice(0, limit);
 
       const studyCardIds: number[] = studyCards.map((el) => el.id);
