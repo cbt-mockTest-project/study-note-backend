@@ -16,7 +16,7 @@ export class HistoryService {
     saveHistoryInput: SaveHistoryInput,
   ): Promise<SaveHistoryOutput> {
     try {
-      const { selectedNotes, studySetting } = saveHistoryInput;
+      const { studySetting } = saveHistoryInput;
       const history = await this.histories.findOne({
         where: { user: { id: user.id } },
       });
@@ -24,16 +24,26 @@ export class HistoryService {
         await this.histories.save(
           this.histories.create({
             user,
-            selectedNotes,
-            studySetting,
+            studySettings: [studySetting],
           }),
         );
         return {
           ok: true,
         };
       }
-      if (selectedNotes) history.selectedNotes = selectedNotes;
-      if (studySetting) history.studySetting = studySetting;
+      const existedIndex = history.studySettings.findIndex(
+        (s) => s.folderId === studySetting.folderId,
+      );
+      if (existedIndex > -1) {
+        history.studySettings = history.studySettings.map((s, index) => {
+          if (index === existedIndex) {
+            return studySetting;
+          }
+          return s;
+        });
+      } else {
+        history.studySettings.push(studySetting);
+      }
       await this.histories.save(history);
 
       return {

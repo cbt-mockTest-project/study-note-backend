@@ -14,36 +14,43 @@ import { CoreEntity } from 'src/common/entities/core.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 
-enum StudyMode {
+enum StudyOrder {
   Random = 'random',
   Normal = 'normal',
 }
 
-export class SelectedNotes {
-  @IsNumber()
-  @Min(0)
-  folderId: number;
-
-  @IsArray()
-  @ArrayNotEmpty()
-  @IsInt({ each: true })
-  noteIds: number[];
+enum StudyMode {
+  Answer = 'answer',
+  Card = 'card',
+  Typing = 'typing',
 }
 
 export class StudySetting {
-  @IsOptional()
-  @IsArray()
-  @ValidateIf((o) => Array.isArray(o.scores) && o.scores.length > 0)
-  @IsIn(Object.values(CardScoreLevel), { each: true })
-  scores?: CardScoreLevel[];
+  @IsNumber()
+  @Min(0)
+  folderId: number;
 
   @IsOptional()
   @IsNumber()
   @Min(0)
   limit?: number;
 
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsInt({ each: true })
+  studyNoteIds: number[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateIf((o) => Array.isArray(o.scores) && o.scores.length > 0)
+  @IsIn(Object.values(CardScoreLevel), { each: true })
+  scores?: CardScoreLevel[];
+
   @IsEnum(StudyMode)
-  order: StudyMode = StudyMode.Normal;
+  mode: StudyMode;
+
+  @IsEnum(StudyOrder)
+  order: StudyOrder = StudyOrder.Normal;
 }
 
 @Entity()
@@ -53,8 +60,5 @@ export class History extends CoreEntity {
   user: User;
 
   @Column({ type: 'json', default: null })
-  selectedNotes: SelectedNotes;
-
-  @Column({ type: 'json', default: null })
-  studySetting: StudySetting;
+  studySettings: StudySetting[];
 }
