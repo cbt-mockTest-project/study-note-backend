@@ -136,6 +136,9 @@ export class UserService {
     try {
       const user = await this.users.findOne({
         where: { id },
+        relations: {
+          history: true,
+        },
       });
       if (!user) {
         return {
