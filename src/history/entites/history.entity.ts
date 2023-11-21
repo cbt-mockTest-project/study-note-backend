@@ -31,11 +31,6 @@ export class SelectedNotes {
 }
 
 export class StudySetting {
-  @IsArray()
-  @ArrayNotEmpty()
-  @IsInt({ each: true })
-  studyNoteIds: number[];
-
   @IsOptional()
   @IsArray()
   @ValidateIf((o) => Array.isArray(o.scores) && o.scores.length > 0)
@@ -48,7 +43,7 @@ export class StudySetting {
   limit?: number;
 
   @IsEnum(StudyMode)
-  mode: StudyMode = StudyMode.Normal;
+  order: StudyMode = StudyMode.Normal;
 }
 
 @Entity()
