@@ -7,9 +7,10 @@ import { FolderEditAccess } from 'src/folder-edit-access/entities/folder-edit-ac
 import { FolderLike } from 'src/folder-like/entities/folder-like.entity';
 import { FolderReadAccess } from 'src/folder-read-access/entities/folder-read-access.entity';
 import { Folder } from 'src/folder/entities/folder.entity';
+import { History } from 'src/history/entites/history.entity';
 import { StudyCard } from 'src/study-card/entities/study-card.entity';
 import { StudyNote } from 'src/study-note/entities/study-note.entity';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne } from 'typeorm';
 
 export enum LoginType {
   GOOGLE = 'google',
@@ -86,4 +87,7 @@ export class User extends CoreEntity {
 
   @OneToMany(() => CardComment, (cardComment) => cardComment.user)
   cardComments: CardComment[];
+
+  @OneToOne(() => History, (history) => history.user)
+  history: History;
 }

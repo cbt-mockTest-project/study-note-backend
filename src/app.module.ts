@@ -14,6 +14,7 @@ import { FolderReadAccessModule } from './folder-read-access/folder-read-access.
 import { FolderEditAccessModule } from './folder-edit-access/folder-edit-access.module';
 import { CardCommentModule } from './card-comment/card-comment.module';
 import { UploadModule } from './upload/upload.module';
+import { HistoryModule } from './history/history.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { UploadModule } from './upload/upload.module';
     FolderEditAccessModule,
     CardCommentModule,
     UploadModule,
+    HistoryModule,
   ],
   controllers: [],
   providers: [],
