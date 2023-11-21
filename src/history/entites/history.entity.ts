@@ -32,8 +32,7 @@ export class StudySetting {
 
   @IsOptional()
   @IsNumber()
-  @Min(0)
-  limit?: number;
+  limit?: number = null;
 
   @IsArray()
   @ArrayNotEmpty()
