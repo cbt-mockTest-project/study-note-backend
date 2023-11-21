@@ -6,9 +6,9 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { CardScoreLevel } from 'src/card-score/entities/card-score.entity';
 import { CoreOutput } from 'src/common/dtos/output.dto';
 import { StudyCard } from '../entities/study-card.entity';
+import { CardScoreLevel } from 'src/card-score/entities/card-score.entity';
 
 export class GetStudyCardsFromNoteIdsInput {
   @Transform(

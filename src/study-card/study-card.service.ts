@@ -17,7 +17,10 @@ import {
   GetStudyCardsFromNoteIdsInput,
   GetStudyCardsFromNoteIdsOutput,
 } from './dtos/get-study-cards-from-note-ids.dto';
-import { CardScore } from 'src/card-score/entities/card-score.entity';
+import {
+  CardScore,
+  CardScoreLevel,
+} from 'src/card-score/entities/card-score.entity';
 import { shuffle } from 'lodash';
 
 @Injectable()
@@ -201,7 +204,7 @@ export class StudyCardService {
           ...card,
           myScore:
             cardScores.find((score) => score.studyCard.id === card.id)?.score ||
-            null,
+            CardScoreLevel.NONE,
         }))
         .filter((card) => scores.length === 0 || scores.includes(card.myScore));
       return {

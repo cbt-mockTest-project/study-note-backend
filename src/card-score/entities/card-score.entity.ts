@@ -7,13 +7,14 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 export enum CardScoreLevel {
   HiGH = 'HIGH',
   MEDIUM = 'MEDIUM',
+  NONE = 'NONE',
   LOW = 'LOW',
 }
 
 @Entity()
 export class CardScore extends CoreEntity {
   @IsEnum(CardScoreLevel)
-  @Column({ type: 'enum', enum: CardScoreLevel })
+  @Column({ type: 'enum', enum: CardScoreLevel, default: CardScoreLevel.NONE })
   score: CardScoreLevel;
 
   @ManyToOne(() => User, (user) => user.cardScores, { onDelete: 'CASCADE' })
